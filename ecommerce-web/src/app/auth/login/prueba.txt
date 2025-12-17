@@ -1,0 +1,4 @@
+{
+  "email": "alba@test.com",
+  "contrasenia": "Password1"
+}
