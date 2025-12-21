@@ -14,6 +14,6 @@ public class ControladorPrueba {
     @GetMapping
     public String protegido() {
         String email = UsuarioAutenticadoUtil.obtenerEmail();
-        return "Hola" + email + ", acceso permitido";
+        return "Hola " + email + ", acceso permitido";
     }
 }
