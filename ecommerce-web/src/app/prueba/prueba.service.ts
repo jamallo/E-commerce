@@ -7,11 +7,12 @@ import { HttpClient } from "@angular/common/http";
 export class PruebaService {
 
   private API_URL = 'http://localhost:8081/api/prueba';
+  private respuesta = 'text';
 
   constructor(private http: HttpClient) {}
 
     acceder() {
-      return this.http.get(this.API_URL);
+      return this.http.get(this.API_URL, { responseType: 'text' });
 
   }
 }
