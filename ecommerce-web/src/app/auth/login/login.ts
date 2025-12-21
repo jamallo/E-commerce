@@ -10,7 +10,7 @@ import { AuthService } from '../auth.service';
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export class LoginComponent {
+export class Login {
 
   email = '';
   contrasenia = '';

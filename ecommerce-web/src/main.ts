@@ -8,6 +8,7 @@ import { JwtInterceptor } from './app/core/interceptors/jwt.interceptor';
 
 bootstrapApplication(App, {
   providers: [
+    provideRouter(routes),
     provideHttpClient(withInterceptors([JwtInterceptor])),
   ]
 });
