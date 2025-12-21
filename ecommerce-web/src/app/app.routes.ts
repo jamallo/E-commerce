@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
-import { Login } from './auth/login/login';
+import { LoginComponent } from './auth/login/login.component';
 import { PruebaComponent } from './prueba/prueba.component';
-import { AuthGuard } from './auth/auth.guard';
+import { authGuard } from './auth/auth.guard';
+import { AdminComponent } from './admin/admin.component';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: Login},
-  { path: 'prueba', component: PruebaComponent, canActivate: [AuthGuard]},
+  { path: 'login', component: LoginComponent},
+  { path: 'prueba', component: PruebaComponent, canActivate: [authGuard]},
   { path: '', redirectTo: 'login', pathMatch: 'full'},
-
+  { path: 'admin', component: AdminComponent, canActivate: [roleGuard('ADMIN')]}
 ];

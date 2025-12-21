@@ -33,4 +33,13 @@ export class AuthService {
   isLogged(): boolean {
     return !!this.getToken();
   }
+
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload));
+    return decoded.rol || null;
+  }
 }

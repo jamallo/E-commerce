@@ -1,0 +1,14 @@
+<nav class="navbar">
+      @if (!isLogged()) {
+        <button (click)="goLogin()">Login</button>
+      }
+
+      @if (isLogged()) {
+        <button (click)="goPrueba()">Prueba</button>
+        <button (click)="logout()">Deslogarse</button>
+      }
+
+      @if (isLogged() && isAdmin()) {
+        <button (click)="goAdmin()"> Admin </button>
+      }
+    </nav>

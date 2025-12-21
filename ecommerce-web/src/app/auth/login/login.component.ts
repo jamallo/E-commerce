@@ -2,30 +2,34 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class Login {
+export class LoginComponent {
 
   email = '';
   contrasenia = '';
   error = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router) {}
 
-  login() {
+  login(): void {
     this.authService.login(this.email, this.contrasenia)
     .subscribe({
       next: () => {
-        alert('Login correcto');
+        this.error = '';
+        this.router.navigate(['/prueba']);
       },
       error: () => {
-        alert ('Credenciales incorrectas');
+        this.error = 'Credenciales incorrectas';
       }
     });
 
