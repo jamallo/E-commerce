@@ -52,9 +52,9 @@ public class FiltroJwtAutenticacion extends OncePerRequestFilter{ //El filtro se
                 // 5 - Estraer roles
                 List<String> roles = servicioJwt.extraerRoles(tokenJwt);
 
-                List<GrantedAuthority> authorities = roles.stream()
+                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));/*roles.stream()
                         .map(rol -> (GrantedAuthority)new SimpleGrantedAuthority("ROLE_" + rol))
-                        .toList();
+                        .toList();*/
 
                 // 6 - Crear autenticación
                 UsernamePasswordAuthenticationToken autenticacion =
