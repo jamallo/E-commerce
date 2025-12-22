@@ -44,10 +44,11 @@ public class ServicioJwtImpl implements ServicioJwt {
                 .compact();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> extraerRoles(String token) {
-        return obtenerClaims(token)
-                .get("roles", List.class);
+        Claims claims = obtenerClaims(token);
+        return (List<String>) claims.get("roles");
     }
 
     @Override

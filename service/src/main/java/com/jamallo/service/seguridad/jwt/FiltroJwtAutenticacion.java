@@ -16,6 +16,7 @@ import com.jamallo.service.seguridad.jwt.ServicioJwt;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -52,9 +53,9 @@ public class FiltroJwtAutenticacion extends OncePerRequestFilter{ //El filtro se
                 // 5 - Estraer roles
                 List<String> roles = servicioJwt.extraerRoles(tokenJwt);
 
-                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));/*roles.stream()
-                        .map(rol -> (GrantedAuthority)new SimpleGrantedAuthority("ROLE_" + rol))
-                        .toList();*/
+                List<GrantedAuthority> authorities = roles.stream()//List.of(new SimpleGrantedAuthority("ROLE_USER"));/*roles.stream()
+                        .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol))
+                        .collect(Collectors.toList());
 
                 // 6 - Crear autenticación
                 UsernamePasswordAuthenticationToken autenticacion =

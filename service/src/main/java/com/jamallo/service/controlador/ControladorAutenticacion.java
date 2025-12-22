@@ -6,6 +6,7 @@ import com.jamallo.service.dto.RegistroRequest;
 import com.jamallo.service.servicio.ServicioAutenticacion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController //Devuelve JSON directamente,  no vistas HTML
@@ -26,4 +27,6 @@ public class ControladorAutenticacion {
     public LoginResponse login(@RequestBody LoginResquest resquest) {
         return servicioAutenticacion.login(resquest);
     }
+
+
 }

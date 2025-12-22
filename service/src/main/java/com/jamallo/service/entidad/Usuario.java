@@ -3,6 +3,7 @@ package com.jamallo.service.entidad;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity //indica que es una tabla en BBDD
@@ -32,5 +33,5 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn (name = "rol_id")
     )
 
-    private Set<Rol> roles;
+    private Set<Rol> roles = new HashSet<>();
 }
