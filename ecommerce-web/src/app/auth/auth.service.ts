@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  sub: string;
+  roles?: string[];
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -30,16 +37,36 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  isLogged(): boolean {
-    return !!this.getToken();
-  }
-
-  getUserRole(): string | null {
+  private decodeToken(): JwtPayload | null {
     const token = this.getToken();
     if (!token) return null;
 
-    const payload = token.split('.')[1];
-    const decoded = JSON.parse(atob(payload));
-    return decoded.rol || null;
+    try {
+      return jwtDecode<JwtPayload>(token);
+    } catch {
+      return null;
+    }
+  }
+
+  getEmail(): string | null {
+    return this.decodeToken()?.sub ?? null;
+  }
+
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp * 1000;
+    return Date.now() > exp;
+  }
+
+
+  isLogged(): boolean {
+    return !!this.getToken() && !this.isTokenExpired();
+  }
+
+  getUserRole(): string | null {
+    return this.decodeToken()?.roles?.[0] ?? null;
   }
 }

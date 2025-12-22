@@ -1,14 +1,21 @@
 import { inject } from "@angular/core";
 import { HttpInterceptorFn } from '@angular/common/http';
 import { AuthService } from "../../auth/auth.service";
+import { Router } from "@angular/router";
+import { captureError } from "rxjs/internal/util/errorContext";
+import { catchError, throwError } from "rxjs";
 
 export const JwtInterceptor: HttpInterceptorFn = (req, next) => {
 
-  if (req.url.includes('/auth/login') || req.url.includes('/auth/registrar')) {
-    return next(req);
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isTokenExpired()) {
+    authService.logout();
+    router.navigate(['/login']);
+    return throwError(() => new Error('Token expirado'));
   }
 
-  const authService = inject(AuthService);
   const token = authService.getToken();
 
   if (token) {
@@ -19,6 +26,17 @@ export const JwtInterceptor: HttpInterceptorFn = (req, next) => {
     });
   }
 
-  return next(req);
+  return next(req).pipe(
+    catchError(error => {
+      
+      //Backend devuelve 401 o 403
+      if (error.status === 401 || error.status === 403) {
+        authService.logout();
+        router.navigate(['/login']);
+      }
+
+      return throwError(() => error);
+    })
+  );
 
 };

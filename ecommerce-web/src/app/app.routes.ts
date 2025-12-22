@@ -9,5 +9,5 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'prueba', component: PruebaComponent, canActivate: [authGuard]},
   { path: '', redirectTo: 'login', pathMatch: 'full'},
-  { path: 'admin', component: AdminComponent, canActivate: [roleGuard('ADMIN')]}
+  { path: 'admin', component: AdminComponent, canActivate: [roleGuard]}
 ];
