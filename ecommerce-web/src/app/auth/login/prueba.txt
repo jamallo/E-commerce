@@ -2,3 +2,6 @@
   "email": "alba@test.com",
   "contrasenia": "Password1"
 }
+
+admin@test.com
+$2a$10$6Wk3hHqCmC8TnUKBzKwHuOjDlCPDmQhfTOGcnu/HvD0AkTSrHUcUS
