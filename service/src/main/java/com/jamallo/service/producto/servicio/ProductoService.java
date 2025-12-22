@@ -14,4 +14,6 @@ public interface ProductoService {
     Optional<Producto> buscarPorId(Long id);
 
     void eliminar(Long id);
+
+    Producto actualizar (Long id, Producto producto);
 }

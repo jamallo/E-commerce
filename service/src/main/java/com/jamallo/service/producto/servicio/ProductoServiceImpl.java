@@ -36,4 +36,17 @@ public class ProductoServiceImpl implements ProductoService {
     public void eliminar(Long id) {
         productoRepository.deleteById(id);
     }
+
+    @Override
+    public Producto actualizar(Long id, Producto producto) {
+        Producto existente = productoRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        existente.setNombre(producto.getNombre());
+        existente.setPrecio(producto.getPrecio());
+        existente.setDescripcion(producto.getDescripcion());
+
+        return productoRepository.save(existente);
+    }
 }
