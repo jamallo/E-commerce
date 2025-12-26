@@ -1,7 +1,11 @@
 package com.jamallo.service.producto.controlador;
 
+import com.jamallo.service.producto.dto.ProductoRequestDTO;
+import com.jamallo.service.producto.dto.ProductoResponseDTO;
 import com.jamallo.service.producto.modelo.Producto;
 import com.jamallo.service.producto.servicio.ProductoService;
+import com.jamallo.service.producto.util.ProductoMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +23,20 @@ public class ProductoControlador {
     //Crear producto - SOLO ADMINISTRADOR
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Producto> crear(@RequestBody Producto producto) {
-        Producto creado = productoService.guardar(producto);
-        return ResponseEntity.ok(creado);
+    public ResponseEntity<ProductoResponseDTO> crear(@Valid @RequestBody ProductoRequestDTO dto) {
+        Producto producto = ProductoMapper.toEntity(dto);
+        Producto guardado = productoService.crear(producto);
+        return ResponseEntity.ok(ProductoMapper.toDTO(guardado));
     }
 
     //Listar productos - PÚBLICO
     @GetMapping
-    public ResponseEntity<List<Producto>> listar() {
-        return ResponseEntity.ok(productoService.listarTodos());
+    public ResponseEntity<List<ProductoResponseDTO>> listar() {
+        return ResponseEntity.ok(
+                productoService.listarTodos()
+                        .stream()
+                        .map(ProductoMapper::toDTO)
+                        .toList());
     }
 
     //PÚBLICO
@@ -49,7 +58,9 @@ public class ProductoControlador {
     //solo ADMINISTRADOR
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizar(@PathVariable Long id, @RequestBody Producto producto) {
-        return ResponseEntity.ok((productoService.actualizar(id, producto)));
+    public ResponseEntity<ProductoResponseDTO> actualizar(@PathVariable Long id, @RequestBody ProductoRequestDTO dto) {
+
+        Producto productoActualizado = productoService.actualizar(id, dto);
+        return ResponseEntity.ok((ProductoMapper.toDTO(productoActualizado)));
     }
 }
