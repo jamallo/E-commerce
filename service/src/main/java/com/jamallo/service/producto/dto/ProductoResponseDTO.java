@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class ProductoResponseDTO {

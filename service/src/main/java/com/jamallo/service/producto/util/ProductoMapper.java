@@ -6,6 +6,8 @@ import com.jamallo.service.producto.modelo.Producto;
 
 public class ProductoMapper {
 
+    private ProductoMapper(){}
+
     public static Producto toEntity(ProductoRequestDTO dto) {
         Producto producto = new Producto();
         producto.setNombre(dto.getNombre());
@@ -15,7 +17,7 @@ public class ProductoMapper {
         return producto;
     }
 
-    public static ProductoResponseDTO toDTO(Producto producto) {
+    public static ProductoResponseDTO toResponseDTO(Producto producto) {
         return new ProductoResponseDTO(
                 producto.getId(),
                 producto.getNombre(),
@@ -23,5 +25,12 @@ public class ProductoMapper {
                 producto.getPrecio(),
                 producto.isActivo()
         );
+    }
+
+    public static void actualizarEntidad (Producto producto, ProductoRequestDTO dto) {
+        producto.setNombre(dto.getNombre());
+        producto.setDescripcion(dto.getDescripcion());
+        producto.setPrecio(dto.getPrecio());
+        producto.setActivo(dto.getActivo());
     }
 }
