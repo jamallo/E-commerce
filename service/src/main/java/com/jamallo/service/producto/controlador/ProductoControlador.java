@@ -61,7 +61,7 @@ public class ProductoControlador {
         return ResponseEntity.ok((productoService.actualizar(id, dto)));
     }
 
-    //@GetMapping
+    @GetMapping
     public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> listarPaginado(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -82,7 +82,7 @@ public class ProductoControlador {
                         precioMax));
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> filtrar (
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Boolean activo,
@@ -96,5 +96,5 @@ public class ProductoControlador {
         return ResponseEntity.ok(
                 productoService.filtrar(nombre, activo, precioMin, precioMax, page, size, sortBy)
         );
-    }
+    }*/
 }

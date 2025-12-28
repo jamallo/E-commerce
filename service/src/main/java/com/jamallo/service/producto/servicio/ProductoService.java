@@ -30,7 +30,7 @@ public interface ProductoService {
             BigDecimal precioMin,
             BigDecimal precioMax);
 
-    PaginaResponseDTO<ProductoResponseDTO> filtrar (
+    /*PaginaResponseDTO<ProductoResponseDTO> filtrar (
             String nombre,
             Boolean activo,
             BigDecimal precioMin,
@@ -38,5 +38,5 @@ public interface ProductoService {
             int page,
             int size,
             String sortBy
-    );
+    );*/
 }

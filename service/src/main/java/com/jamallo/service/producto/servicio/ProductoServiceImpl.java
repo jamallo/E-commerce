@@ -179,7 +179,7 @@ public class ProductoServiceImpl implements ProductoService {
                 paginaProductos.getTotalPages())*//*
     }
 */
-    @Override
+   /* @Override
     public PaginaResponseDTO<ProductoResponseDTO> filtrar(
             String nombre,
             Boolean activo,
@@ -216,5 +216,5 @@ public class ProductoServiceImpl implements ProductoService {
                 pagina.getTotalElements(),
                 pagina.getTotalPages()
         );
-    }
+    }*/
 }
