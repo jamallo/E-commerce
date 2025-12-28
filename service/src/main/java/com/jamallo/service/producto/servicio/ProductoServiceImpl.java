@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,11 +51,13 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public Optional<ProductoResponseDTO> buscarPorId(Long id) {
+    public ProductoResponseDTO buscarPorId(Long id) {
 
-        Producto producto =  productoRepository.findById(id).orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado con id " + id));
+        Producto producto =  productoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNoEncontradoException("Producto no encontrado con id " + id));
 
-        return Optional.of(ProductoMapper.toResponseDTO(producto));
+        return ProductoMapper.toResponseDTO(producto);
     }
 
     @Override
@@ -96,6 +99,46 @@ public class ProductoServiceImpl implements ProductoService {
                 productos,
                 paginaProductos.getNumber(),
                 paginaProductos.getTotalPages(),
-                paginaProductos.getTotalElements());
+                paginaProductos.getTotalElements(),
+                paginaProductos.getTotalPages());
+    }
+
+    @Override
+    public PaginaResponseDTO<ProductoResponseDTO> filtrar(
+            String nombre,
+            Boolean activo,
+            BigDecimal precioMin,
+            BigDecimal precioMax,
+            int page,
+            int size,
+            String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        //Valores por defecto
+        String nombreFiltro = (nombre !=null) ? nombre : "";
+        Boolean activoFiltro = (activo != null) ? activo : true;
+        BigDecimal min =(precioMin != null) ? precioMin : BigDecimal.ZERO;
+        BigDecimal max = (precioMax != null) ? precioMax : new BigDecimal("999999");
+
+        Page<Producto> pagina = productoRepository
+                .findByNombreContainingIgnoreCaseAndActivoAndPrecioBetween(
+                nombreFiltro,
+                activoFiltro,
+                min,
+                max,
+                pageable
+        );
+
+        return new PaginaResponseDTO<>(
+                pagina.getContent()
+                        .stream()
+                        .map(ProductoMapper::toResponseDTO)
+                        .toList(),
+                pagina.getNumber(),
+                pagina.getSize(),
+                pagina.getTotalElements(),
+                pagina.getTotalPages()
+        );
     }
 }

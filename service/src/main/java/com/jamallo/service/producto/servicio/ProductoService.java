@@ -5,6 +5,7 @@ import com.jamallo.service.producto.dto.ProductoRequestDTO;
 import com.jamallo.service.producto.dto.ProductoResponseDTO;
 import com.jamallo.service.producto.modelo.Producto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +15,21 @@ public interface ProductoService {
 
     List<ProductoResponseDTO> listarTodos();
 
-    Optional<ProductoResponseDTO> buscarPorId(Long id);
+    ProductoResponseDTO buscarPorId(Long id);
 
     void eliminar(Long id);
 
     ProductoResponseDTO actualizar (Long id, ProductoRequestDTO dto);
 
     PaginaResponseDTO<ProductoResponseDTO> listarPaginado(int page, int size, String sortBy);
+
+    PaginaResponseDTO<ProductoResponseDTO> filtrar (
+            String nombre,
+            Boolean activo,
+            BigDecimal precioMin,
+            BigDecimal precioMax,
+            int page,
+            int size,
+            String sortBy
+    );
 }

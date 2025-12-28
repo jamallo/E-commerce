@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +33,14 @@ public class ProductoControlador {
 
     //Listar productos - PÚBLICO
     //@GetMapping
-    public ResponseEntity<List<ProductoResponseDTO>> listar() {
+    /*public ResponseEntity<List<ProductoResponseDTO>> listar() {
         return ResponseEntity.ok(
                 productoService.listarTodos());
-    }
+    }*/
 
     //PÚBLICO
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ProductoResponseDTO>> obtener(@PathVariable Long id) {
+    public ResponseEntity<ProductoResponseDTO> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(productoService.buscarPorId(id));
     }
 
@@ -54,18 +55,34 @@ public class ProductoControlador {
     //solo ADMINISTRADOR
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<ProductoResponseDTO> actualizar(@PathVariable Long id, @RequestBody ProductoRequestDTO dto) {
+    public ResponseEntity<ProductoResponseDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequestDTO dto) {
 
 
         return ResponseEntity.ok((productoService.actualizar(id, dto)));
     }
 
-    @GetMapping
+    //@GetMapping
     public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> listarPaginado(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy
     ) {
         return ResponseEntity.ok(productoService.listarPaginado(page, size, sortBy));
+    }
+
+    @GetMapping
+    public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> filtrar (
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Boolean activo,
+            @RequestParam(required = false) BigDecimal precioMin,
+            @RequestParam(required = false) BigDecimal precioMax,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy
+
+            ) {
+        return ResponseEntity.ok(
+                productoService.filtrar(nombre, activo, precioMin, precioMax, page, size, sortBy)
+        );
     }
 }
