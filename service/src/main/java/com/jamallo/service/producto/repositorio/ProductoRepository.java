@@ -23,4 +23,12 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
             String nombre,
             Pageable pageable
     );
+
+    Page<Producto> findByActivoAndNombreContainingIgnoreCase(
+            Boolean activo,
+            String nombre,
+            Pageable pageable
+    );
+
+    Page<Producto> findByActivo(Boolean activo, Pageable pageable);
 }

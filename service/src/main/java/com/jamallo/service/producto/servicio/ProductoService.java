@@ -21,7 +21,12 @@ public interface ProductoService {
 
     ProductoResponseDTO actualizar (Long id, ProductoRequestDTO dto);
 
-    PaginaResponseDTO<ProductoResponseDTO> listarPaginado(int page, int size, String sortBy);
+    PaginaResponseDTO<ProductoResponseDTO> listarPaginado(
+            int page,
+            int size,
+            String sortBy,
+            Boolean activo,
+            String nombre);
 
     PaginaResponseDTO<ProductoResponseDTO> filtrar (
             String nombre,

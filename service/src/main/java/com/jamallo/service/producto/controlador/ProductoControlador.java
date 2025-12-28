@@ -65,9 +65,17 @@ public class ProductoControlador {
     public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> listarPaginado(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) Boolean activo,
+            @RequestParam(required = false) String nombre
     ) {
-        return ResponseEntity.ok(productoService.listarPaginado(page, size, sortBy));
+        return ResponseEntity.ok(
+                productoService.listarPaginado(
+                        page,
+                        size,
+                        sortBy,
+                        activo,
+                        nombre));
     }
 
     @GetMapping

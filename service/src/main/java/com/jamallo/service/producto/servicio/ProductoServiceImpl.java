@@ -79,28 +79,57 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public PaginaResponseDTO<ProductoResponseDTO> listarPaginado(int page, int size, String sortBy) {
+    public PaginaResponseDTO<ProductoResponseDTO> listarPaginado(
+            int page,
+            int size,
+            String sortBy,
+            Boolean activo,
+            String nombre) {
 
         Pageable pageable = PageRequest.of(
                 page,
                 size,
                 Sort.by(sortBy).ascending());
 
-        Page<Producto> paginaProductos = productoRepository
+        Page<Producto> pagina;
+
+        if (activo != null && nombre != null && !nombre.isBlank()) {
+            pagina = productoRepository.findByActivoAndNombreContainingIgnoreCase(
+                    activo,
+                    nombre,
+                    pageable);
+        } else if (activo !=null){
+            pagina = productoRepository.findByActivo(activo, pageable);
+        } else if (nombre != null && !nombre.isBlank()) {
+            pagina = productoRepository
+                    .findByNombreContainingIgnoreCase(nombre, pageable);
+        } else {
+            pagina = productoRepository.findAll(pageable);
+        }
+
+        /*Page<Producto> paginaProductos = productoRepository
                 .findAll(pageable);
 
         List<ProductoResponseDTO> productos = paginaProductos
                 .getContent()
                 .stream()
                 .map(ProductoMapper::toResponseDTO)
-                .toList();
+                .toList();*/
 
         return new PaginaResponseDTO<>(
-                productos,
+                pagina.getContent()
+                        .stream()
+                        .map(ProductoMapper::toResponseDTO)
+                        .toList(),
+               pagina.getNumber(),
+               pagina.getSize(),
+               pagina.getTotalElements(),
+               pagina.getTotalPages());
+               /* productos,
                 paginaProductos.getNumber(),
                 paginaProductos.getTotalPages(),
                 paginaProductos.getTotalElements(),
-                paginaProductos.getTotalPages());
+                paginaProductos.getTotalPages())*/
     }
 
     @Override
