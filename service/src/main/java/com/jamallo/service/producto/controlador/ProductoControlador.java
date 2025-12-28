@@ -67,7 +67,9 @@ public class ProductoControlador {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(required = false) Boolean activo,
-            @RequestParam(required = false) String nombre
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) BigDecimal precioMin,
+            @RequestParam(required = false) BigDecimal precioMax
     ) {
         return ResponseEntity.ok(
                 productoService.listarPaginado(
@@ -75,7 +77,9 @@ public class ProductoControlador {
                         size,
                         sortBy,
                         activo,
-                        nombre));
+                        nombre,
+                        precioMin,
+                        precioMax));
     }
 
     @GetMapping

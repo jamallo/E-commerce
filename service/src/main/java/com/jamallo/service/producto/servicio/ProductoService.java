@@ -26,7 +26,9 @@ public interface ProductoService {
             int size,
             String sortBy,
             Boolean activo,
-            String nombre);
+            String nombre,
+            BigDecimal precioMin,
+            BigDecimal precioMax);
 
     PaginaResponseDTO<ProductoResponseDTO> filtrar (
             String nombre,

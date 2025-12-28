@@ -7,12 +7,14 @@ import com.jamallo.service.producto.dto.ProductoResponseDTO;
 import com.jamallo.service.producto.modelo.Producto;
 import com.jamallo.service.producto.repositorio.ProductoRepository;
 import com.jamallo.service.producto.servicio.ProductoService;
+import com.jamallo.service.producto.specification.ProductoSpecification;
 import com.jamallo.service.producto.util.ProductoMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -84,37 +86,82 @@ public class ProductoServiceImpl implements ProductoService {
             int size,
             String sortBy,
             Boolean activo,
-            String nombre) {
+            String nombre,
+            BigDecimal precioMin,
+            BigDecimal precioMax)
+    {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Specification<Producto> spec =
+                ProductoSpecification.filtrar(nombre, activo, precioMin, precioMax);
+
+        Page<Producto> pagina = productoRepository.findAll(spec, pageable);
+
+        return PaginaResponseDTO.fromPage(pagina.map(ProductoMapper::toResponseDTO));
+    }
+
+  /*  @Override
+    public PaginaResponseDTO<ProductoResponseDTO> listarPaginado(
+            int page,
+            int size,
+            String sortBy,
+            Boolean activo,
+            String nombre,
+            BigDecimal precioMin,
+            BigDecimal precioMax) {
 
         Pageable pageable = PageRequest.of(
                 page,
                 size,
                 Sort.by(sortBy).ascending());
 
+        //Valores por defecto
+        BigDecimal min = precioMin != null ? precioMin : BigDecimal.ZERO;
+        BigDecimal max = precioMax != null ? precioMax : new BigDecimal("999999999");
+
         Page<Producto> pagina;
 
         if (activo != null && nombre != null && !nombre.isBlank()) {
-            pagina = productoRepository.findByActivoAndNombreContainingIgnoreCase(
-                    activo,
-                    nombre,
-                    pageable);
-        } else if (activo !=null){
-            pagina = productoRepository.findByActivo(activo, pageable);
+            pagina = productoRepository
+                    .findByActivoAndNombreContainingIgnoreCaseAndPrecioBetween(
+                        activo,
+                        nombre,
+                        min,
+                        max,
+                        pageable);
+
+        } else if (activo != null){
+            pagina = productoRepository.
+                    findByActivoAndPrecioBetween(
+                            activo,
+                            min,
+                            max,
+                            pageable);
+
         } else if (nombre != null && !nombre.isBlank()) {
             pagina = productoRepository
-                    .findByNombreContainingIgnoreCase(nombre, pageable);
+                    .findByNombreContainingIgnoreCaseAndPrecioBetween(
+                            nombre,
+                            min,
+                            max,
+                            pageable);
+
         } else {
-            pagina = productoRepository.findAll(pageable);
+            pagina = productoRepository.findByPrecioBetween(
+                    min,
+                    max,
+                    pageable);
         }
 
-        /*Page<Producto> paginaProductos = productoRepository
+        *//*Page<Producto> paginaProductos = productoRepository
                 .findAll(pageable);
 
         List<ProductoResponseDTO> productos = paginaProductos
                 .getContent()
                 .stream()
                 .map(ProductoMapper::toResponseDTO)
-                .toList();*/
+                .toList();*//*
 
         return new PaginaResponseDTO<>(
                 pagina.getContent()
@@ -125,13 +172,13 @@ public class ProductoServiceImpl implements ProductoService {
                pagina.getSize(),
                pagina.getTotalElements(),
                pagina.getTotalPages());
-               /* productos,
+               *//* productos,
                 paginaProductos.getNumber(),
                 paginaProductos.getTotalPages(),
                 paginaProductos.getTotalElements(),
-                paginaProductos.getTotalPages())*/
+                paginaProductos.getTotalPages())*//*
     }
-
+*/
     @Override
     public PaginaResponseDTO<ProductoResponseDTO> filtrar(
             String nombre,
