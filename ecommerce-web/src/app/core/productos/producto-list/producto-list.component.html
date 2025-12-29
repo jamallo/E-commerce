@@ -1,14 +1,45 @@
+<!-- <h2>Listado de productos</h2>
+
+<ng-container *ngIf="!cargando; else cargandoTpl">
+
+  <ng-container *ngIf="productos.length > 0; else vacioTpl">
+    <table border="1" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Activo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos; trackBy: trackById">
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.descripcion }}</td>
+          <td>{{ producto.precio }} €</td>
+          <td>{{ producto.activo ? 'Sí' : 'No' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+</ng-container>
+
+<ng-template #cargandoTpl>
+  <p>Cargando productos...</p>
+</ng-template>
+
+<ng-template #vacioTpl>
+  <p>No hay productos disponibles</p>
+</ng-template> -->
+
 <h2>Listado de productos</h2>
 
 @if (cargando) {
   <p>Cargando productos...</p>
-}
-
-@if (!cargando && productos.length === 0) {
+} @else if (productos.length === 0) {
   <p>No hay productos disponibles</p>
-}
-
-@if (!cargando && productos.length > 0) {
+} @else {
   <table border="1" cellpadding="8">
     <thead>
       <tr>
@@ -29,4 +60,4 @@
       }
     </tbody>
   </table>
-}
+} 

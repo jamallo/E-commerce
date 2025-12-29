@@ -14,19 +14,32 @@ import { ProductoService } from "../../service/producto.service";
 
 export class ProductoListComponent implements OnInit {
 
+  trackById(index: number, producto: Producto) {
+    return producto.id;
+  }
+
   productos: Producto[] = [];
   cargando = true;
 
+  totalPaginas = 0;
+  totalElementos = 0;
+  paginaActual= 0;
+
   constructor(private productoService: ProductoService) {}
 
-  ngOnInit(): void {
-    this.productoService.listar().subscribe({
-      next: data => {
-        console.log('Productos recibidos: ', data);
-        this.productos = data;
+  ngOnInit() {
+    this.productoService.listarPaginado().subscribe({
+      next: (response) => {
+        console.log('Productos recibidos: ', response);
+        console.log(Array.isArray(this.productos));
+        this.productos = response.contenido;
+        this.totalPaginas = response.totalPaginas;
+        this.totalElementos = response.totalElementos;
+        this.paginaActual = response.paginaActual;
         this.cargando = false;
+        console.log(Array.isArray(this.productos));
       },
-      error: err => {
+      error: (err) => {
         console.error('ERROR cargando productos: ', err);
         this.cargando = false;
       }
