@@ -1,0 +1,41 @@
+<h2>{{ modoEdicion  ? 'Editar producto' : 'Nuevo producto' }}</h2>
+
+<form (ngSubmit)="guardar()">
+
+  <label>
+    Nombre:
+    <input type="text" [(ngModel)]="producto.nombre" name="nombre" required/>
+  </label>
+
+  <br><br>
+
+  <label>
+    Descripción:
+    <textarea [(ngModel)]="producto.descripcion" name="descripcion"></textarea>
+  </label>
+
+  <br><br>
+
+  <label>
+    Precio:
+    <input type="number" [(ngModel)]="producto.precio" name="precio" required/>
+  </label>
+
+  <br><br>
+
+  <label>
+    Activo:
+    <input type="checkbox" [(ngModel)]="producto.activo" name="activo"/>
+  </label>
+
+  <br><br>
+
+  <button type="submit" [disabled]="cargando">
+    Guardar
+  </button>
+
+</form>
+
+@if (error) {
+  <p style="color: red"> {{ error }} </p>
+}

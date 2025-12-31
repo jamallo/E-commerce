@@ -1,3 +1,106 @@
+
+<h2>Listado de productos</h2>
+
+@if (cargando) {
+  <p>Cargando productos...</p>
+} @else if (productos.length === 0) {
+  <p>No hay productos disponibles</p>
+} @else {
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Activo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (producto of productos; track producto.id) {
+        <tr>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.descripcion }}</td>
+          <td>{{ producto.precio }} €</td>
+          <td>{{ producto.activo ? 'Sí' : 'No' }}</td>
+          <td>
+            <button [routerLink]="['/productos/editar', producto.id]">
+              Editar
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
+@if (!cargando && totalPaginas > 0) {
+  <div style="margin-top: 16px;" class="paginacion">
+
+    <button
+      (click)="paginaAnterior()"
+      [disabled]="paginaActual === 0">
+      ⬅ Anterior
+    </button>
+
+    <span style="margin: 0 12px;">
+      Página {{ paginaActual + 1 }} de {{ totalPaginas }}
+    </span>
+
+    <button
+      (click)="paginaSiguiente()"
+      [disabled]="paginaActual === totalPaginas -1">
+      Siguiente ➡
+    </button>
+
+  </div>
+}
+<h3>Filtros</h3>
+
+<input type="text" placeholder="Nombre" [(ngModel)]="filtros.nombre"/>
+
+<select [(ngModel)]="filtros.activo">
+    <option [ngValue]="undefined">Todos</option>
+    <option [ngValue]="true">Activos</option>
+    <option [ngValue]="false">Inactivos</option>
+</select>
+
+<input
+  type="number"
+  placeholder="Precio mínimo"
+  [(ngModel)]="filtros.precioMin"
+/>
+
+<input
+  type="number"
+  placeholder="Precio máximo"
+  [(ngModel)]="filtros.precioMax"
+/>
+
+<button (click)="aplicarFiltros()">Aplicar filtros</button>
+
+<label>
+  Ordenar por:
+  <select [(ngModel)] = "sortBy" (change)="aplicarFiltros()">
+    <option value="id">ID</option>
+    <option value="nombre">Nombre</option>
+    <option value="precio">Precio</option>
+  </select>
+</label>
+
+<label>
+  Dirección:
+  <select [(ngModel)] = "direccion" (change)="aplicarFiltros()">
+    <option value="ASC">Ascendente</option>
+    <option value="DESC">Descendente</option>
+  </select>
+</label>
+
+<button (click)="limpiarFiltros()" [disabled]="cargando">
+  Limpiar filtros
+</button>
+
+
 <!-- <h2>Listado de productos</h2>
 
 <ng-container *ngIf="!cargando; else cargandoTpl">
@@ -32,32 +135,3 @@
 <ng-template #vacioTpl>
   <p>No hay productos disponibles</p>
 </ng-template> -->
-
-<h2>Listado de productos</h2>
-
-@if (cargando) {
-  <p>Cargando productos...</p>
-} @else if (productos.length === 0) {
-  <p>No hay productos disponibles</p>
-} @else {
-  <table border="1" cellpadding="8">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th>Activo</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (producto of productos; track producto.id) {
-        <tr>
-          <td>{{ producto.nombre }}</td>
-          <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.precio }} €</td>
-          <td>{{ producto.activo ? 'Sí' : 'No' }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-} 
