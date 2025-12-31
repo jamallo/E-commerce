@@ -33,10 +33,10 @@ public class ProductoControlador {
 
     //Listar productos - PÚBLICO
     //@GetMapping
-    /*public ResponseEntity<List<ProductoResponseDTO>> listar() {
+    public ResponseEntity<List<ProductoResponseDTO>> listar() {
         return ResponseEntity.ok(
                 productoService.listarTodos());
-    }*/
+    }
 
     //PÚBLICO
     @GetMapping("/{id}")
@@ -55,10 +55,13 @@ public class ProductoControlador {
     //solo ADMINISTRADOR
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<ProductoResponseDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequestDTO dto) {
+    public ResponseEntity<ProductoResponseDTO> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductoRequestDTO dto) {
 
 
-        return ResponseEntity.ok((productoService.actualizar(id, dto)));
+        return ResponseEntity.ok((productoService
+                .actualizar(id, dto)));
     }
 
     @GetMapping
@@ -66,6 +69,7 @@ public class ProductoControlador {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "id") String direccion,
             @RequestParam(required = false) Boolean activo,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) BigDecimal precioMin,
@@ -76,6 +80,7 @@ public class ProductoControlador {
                         page,
                         size,
                         sortBy,
+                        direccion,
                         activo,
                         nombre,
                         precioMin,
@@ -83,7 +88,7 @@ public class ProductoControlador {
     }
 
     /*@GetMapping
-    public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> filtrar (
+    public ResponseEntity<PaginaResponseDTO<ProductoResponseDTO>> listar (
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Boolean activo,
             @RequestParam(required = false) BigDecimal precioMin,

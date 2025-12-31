@@ -25,6 +25,7 @@ public interface ProductoService {
             int page,
             int size,
             String sortBy,
+            String direccion,
             Boolean activo,
             String nombre,
             BigDecimal precioMin,

@@ -85,13 +85,14 @@ public class ProductoServiceImpl implements ProductoService {
             int page,
             int size,
             String sortBy,
+            String direccion,
             Boolean activo,
             String nombre,
             BigDecimal precioMin,
             BigDecimal precioMax)
     {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direccion, sortBy));
 
         Specification<Producto> spec =
                 ProductoSpecification.filtrar(nombre, activo, precioMin, precioMax);
@@ -100,6 +101,32 @@ public class ProductoServiceImpl implements ProductoService {
 
         return PaginaResponseDTO.fromPage(pagina.map(ProductoMapper::toResponseDTO));
     }
+
+   /* @Override
+    public PaginaResponseDTO<ProductoResponseDTO> filtrar(
+            String nombre,
+            Boolean activo,
+            BigDecimal precioMin,
+            BigDecimal precioMax,
+            int page,
+            int size,
+            String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Specification<Producto> spec = Specification
+                .where(ProductoSpecification.nombreContiene(nombre))
+                .and(ProductoSpecification.activoEs(activo))
+                .and(ProductoSpecification.precioMayorQue(precioMin))
+                .and(ProductoSpecification.precioMenorQue(precioMax));
+
+        Page<ProductoResponseDTO> pageResult =
+                productoRepository.findAll(spec, pageable)
+                        .map(ProductoMapper::toResponseDTO);
+
+        return PaginaResponseDTO.fromPage(pageResult);
+    }
+*/
 
   /*  @Override
     public PaginaResponseDTO<ProductoResponseDTO> listarPaginado(
@@ -179,7 +206,7 @@ public class ProductoServiceImpl implements ProductoService {
                 paginaProductos.getTotalPages())*//*
     }
 */
-   /* @Override
+   /*@Override
     public PaginaResponseDTO<ProductoResponseDTO> filtrar(
             String nombre,
             Boolean activo,
