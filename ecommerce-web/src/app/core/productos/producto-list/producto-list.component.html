@@ -1,8 +1,17 @@
 
 <h2>Listado de productos</h2>
 
+@if (mensaje) {
+  <p class="ok">{{ mensaje }}</p>
+}
+
+@if (error) {
+  <p class="error">{{ error }};
+  </p>
+}
+
 @if (cargando) {
-  <p>Cargando productos...</p>
+  <div class="spinner"></div>
 } @else if (productos.length === 0) {
   <p>No hay productos disponibles</p>
 } @else {
@@ -42,6 +51,14 @@
       </button>
     }
   </table>
+}
+
+@if (mostrarConfirmacion) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <p>¿Seguro que deseas eliminar este producto?</p>
+    </div>
+  </div>
 }
 
 @if (!cargando && totalPaginas > 0) {

@@ -75,7 +75,7 @@ export class AuthService {
     if (!token) return [];
 
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.roles || [];
+    return payload.roles ?? [];
   }
 
   isAdmin(): boolean {

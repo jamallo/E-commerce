@@ -14,13 +14,6 @@ export const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [roleGuard]},
   { path: 'productos', component: ProductoListComponent},
   //{ path: 'productos/nuevo', component: ProductoForm, canActivate: [authGuard], data: { role: 'ADMIN' }},
-  { path: 'productos/nuevo', loadComponent: () =>
-    import('./core/productos/producto-form/producto-form')
-    .then(m => m.ProductoForm)
-  },
-  { path: 'productos/editar/:id',
-    loadComponent: () =>
-      import('./core/productos/producto-form/producto-form')
-    .then(m => m.ProductoForm)
-  }
+  { path: 'productos/nuevo', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}},
+  { path: 'productos/editar/:id', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}}
 ];

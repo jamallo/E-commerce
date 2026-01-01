@@ -49,6 +49,8 @@ export class ProductoForm implements OnInit{
       this.modoEdicion = true;
       this.cargarProductos();
     }
+    this.mensaje = '';
+    this.error = '';
   }
 
   cargarProductos(): void {

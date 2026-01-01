@@ -1,14 +1,13 @@
 <nav class="navbar">
-      @if (!isLogged()) {
-        <button (click)="goLogin()">Login</button>
-      }
 
       @if (isLogged()) {
-        <button (click)="goPrueba()">Prueba</button>
-        <button (click)="logout()">Deslogarse</button>
-      }
+        <a routerLink="/productos">Productos</a>
 
-      @if (isLogged() && isAdmin()) {
-        <button (click)="goAdmin()"> Admin </button>
+        @if (isAdmin()) {
+          <a routerLink = "/productos/nuevo">Nuevo producto</a>
+        }
+        <button (click)="logout()">Deslogarse</button>
+      } @else {
+        <a routerLink ="/login">Login</a>
       }
     </nav>

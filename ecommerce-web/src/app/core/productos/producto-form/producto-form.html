@@ -30,8 +30,8 @@
 
   <br><br>
 
-  <button type="submit">
-    Guardar
+  <button type="submit" [disabled]="cargando">
+    {{ cargando ? 'Guardando...' : 'Guardar'}}
   </button>
 
 </form>

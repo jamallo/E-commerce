@@ -1,13 +1,13 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../auth/auth.service";
 
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
   /* template: `
@@ -52,7 +52,7 @@ export class NavbarComponent {
   }
 
   isAdmin(): boolean {
-    return this.authService.getUserRole() === 'ADMIN';
+    return this.authService.isAdmin();
   }
 
   goAdmin(): void {

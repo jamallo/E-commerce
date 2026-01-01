@@ -21,6 +21,8 @@ export class ProductoListComponent implements OnInit {
   productos: Producto[] = [];
   cargando = true;
 
+
+
   //Variables de ordenación
   totalPaginas = 0;
   totalElementos = 0;
@@ -28,6 +30,9 @@ export class ProductoListComponent implements OnInit {
   tamanioPaginas = 10;
   sortBy = "id";
   direccion = 'ASC';
+
+  mensaje = '';
+  error = '';
 
 
   filtros = {
@@ -44,6 +49,7 @@ export class ProductoListComponent implements OnInit {
   get esAdmin(): boolean {
     return this.authService.isAdmin();
   }
+
 
   ngOnInit(): void {
     this.cargarProdutos();
@@ -115,18 +121,55 @@ export class ProductoListComponent implements OnInit {
 
   eliminar(id: number): void {
 
+
+
     if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
 
     this.productoService.eliminar(id).subscribe({
       next: () => {
-        alert('Producto eliminado correctamente');
+        this.mensaje = 'Producto eliminado correctamente';
         this.cargarProdutos();
+        setTimeout(() => this.mensaje = '', 3000);
       },
       error: err => {
-        alert('Error al eliminar el producto');
+        this.error = 'Error al eliminar el producto';
         console.error(err);
       }
     });
+  }
+
+  productoAEliminar ?: number;
+  mostrarConfirmacion = false;
+
+  confirmarEliminar(id: number) {
+    this.productoAEliminar = id;
+    this.mostrarConfirmacion = true;
+  }
+
+  cancelarEliminar() {
+    this.productoAEliminar = undefined;
+    this.mostrarConfirmacion = false;
+  }
+
+  eliminarConfirmado() {
+    if (this.productoAEliminar === undefined) return;
+
+    this.productoService.eliminar(this.productoAEliminar).subscribe({
+      next: () => {
+        this.mensaje = 'Producto eliminado correctamente';
+        this.mostrarConfirmacion = false;
+        this.productoAEliminar = undefined;
+        this.cargarProdutos();
+      },
+      error: err => {
+        this.error = 'Error al eliminar el producto';
+        console.error(err);
+      }
+    });
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   trackById(index: number, producto: Producto) {
