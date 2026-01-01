@@ -4,6 +4,7 @@ import { Producto } from "../producto.model";
 import { ProductoService } from "../../service/producto.service";
 import { FormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
+import { AuthService } from "../../../auth/auth.service";
 
 
 @Component({
@@ -36,7 +37,13 @@ export class ProductoListComponent implements OnInit {
     precioMax: undefined as number | undefined,
   };
 
-  constructor(private productoService: ProductoService) {}
+  constructor(
+    private productoService: ProductoService,
+    private authService: AuthService) {}
+
+  get esAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.cargarProdutos();

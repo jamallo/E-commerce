@@ -69,4 +69,20 @@ export class AuthService {
   getUserRole(): string | null {
     return this.decodeToken()?.roles?.[0] ?? null;
   }
+
+  getRoles(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.roles || [];
+  }
+
+  isAdmin(): boolean {
+    return this.getRoles().includes('ADMIN');
+  }
+
+  isUser(): boolean {
+    return this.getRoles().includes('USER');
+  }
 }
