@@ -27,6 +27,10 @@ export class ProductoService {
     return this.http.put<Producto>(`${this.API_URL}/${id}`, producto);
   }
 
+  eliminar(id: number) {
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
+  }
+
   listarPaginado(
     page: number = 0,
     size: number = 10,

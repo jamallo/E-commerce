@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
   { path: 'admin', component: AdminComponent, canActivate: [roleGuard]},
   { path: 'productos', component: ProductoListComponent},
-  { path: 'productos/nuevo', component: ProductoForm, canActivate: [authGuard], data: { role: 'ADMIN' }},
+  //{ path: 'productos/nuevo', component: ProductoForm, canActivate: [authGuard], data: { role: 'ADMIN' }},
   { path: 'productos/nuevo', loadComponent: () =>
     import('./core/productos/producto-form/producto-form')
     .then(m => m.ProductoForm)

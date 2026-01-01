@@ -23,11 +23,19 @@
           <td>{{ producto.descripcion }}</td>
           <td>{{ producto.precio }} €</td>
           <td>{{ producto.activo ? 'Sí' : 'No' }}</td>
+          <!-- @if (authService.isAdmin()){ -->
           <td>
             <button [routerLink]="['/productos/editar', producto.id]">
               Editar
             </button>
           </td>
+          <td>
+            <button [routerLink]="['/productos/nuevo']">Nuevo producto</button>
+          </td>
+          <td>
+            <button (click)="eliminar(producto.id)">Eliminar</button>
+          </td>
+          <!-- } -->
         </tr>
       }
     </tbody>

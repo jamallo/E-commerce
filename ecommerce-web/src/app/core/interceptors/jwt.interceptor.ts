@@ -28,7 +28,7 @@ export const JwtInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError(error => {
-      
+
       //Backend devuelve 401 o 403
       if (error.status === 401 || error.status === 403) {
         authService.logout();
@@ -40,3 +40,4 @@ export const JwtInterceptor: HttpInterceptorFn = (req, next) => {
   );
 
 };
+

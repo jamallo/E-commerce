@@ -28,6 +28,7 @@ export class ProductoListComponent implements OnInit {
   sortBy = "id";
   direccion = 'ASC';
 
+
   filtros = {
     nombre: '',
     activo: undefined as boolean | undefined,
@@ -96,12 +97,27 @@ export class ProductoListComponent implements OnInit {
         this.totalElementos = response.totalElementos;
         this.paginaActual = response.paginaActual;
         this.tamanioPaginas = response.tamanioPaginas;
-
         this.cargando = false;
       },
       error: (err) => {
         console.error('ERROR cargando productos: ', err);
         this.cargando = false;
+      }
+    });
+  }
+
+  eliminar(id: number): void {
+
+    if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
+
+    this.productoService.eliminar(id).subscribe({
+      next: () => {
+        alert('Producto eliminado correctamente');
+        this.cargarProdutos();
+      },
+      error: err => {
+        alert('Error al eliminar el producto');
+        console.error(err);
       }
     });
   }

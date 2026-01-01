@@ -23,6 +23,7 @@ export class ProductoForm implements OnInit{
 
   cargando = false;
   error = '';
+  mensaje = '';
 
   idProducto?: number;
   modoEdicion = false;
@@ -66,16 +67,31 @@ export class ProductoForm implements OnInit{
   guardar(): void {
     if (this.form.invalid) return;
 
+    this.cargando = true;
+    this.error = '';
+
     const producto = this.form.value;
 
-    if (this.modoEdicion && this.idProducto) {
-      this.productoService.actualizar(this.idProducto, producto)
-      .subscribe({
-        next: () => this.router.navigate(['/productos']),
-        error: err => console.error(err)});
-    } else {
-      this.productoService.crear(this.form.value)
-      .subscribe(() => this.router.navigate(['/productos']));
-    }
+    const peticion = this.modoEdicion && this.idProducto
+    ? this.productoService.actualizar(this.idProducto, producto)
+    : this.productoService.crear(producto);
+
+    peticion.subscribe({
+      next: () => {
+        this.cargando = false;
+        this.mensaje = this.modoEdicion
+        ? 'Producto actualizado correctamente'
+        : 'Producto creado correctamente';
+
+        setTimeout(() => {
+          this.router.navigate(['/productos']);
+        }, 800);
+      },
+      error: (err) => {
+        this.cargando = false;
+        this.error = 'Error al guardar el producto';
+        console.error(err);
+      }
+    });
   }
 }

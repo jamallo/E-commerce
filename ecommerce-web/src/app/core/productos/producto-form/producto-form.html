@@ -1,41 +1,43 @@
 <h2>{{ modoEdicion  ? 'Editar producto' : 'Nuevo producto' }}</h2>
 
-<form (ngSubmit)="guardar()">
+<form [formGroup]="form" (ngSubmit)="guardar()">
 
   <label>
     Nombre:
-    <input type="text" [(ngModel)]="producto.nombre" name="nombre" required/>
+    <input type="text" formControlName="nombre"/>
   </label>
 
   <br><br>
 
   <label>
     Descripción:
-    <textarea [(ngModel)]="producto.descripcion" name="descripcion"></textarea>
+    <textarea formControlName="descripcion"></textarea>
   </label>
 
   <br><br>
 
   <label>
     Precio:
-    <input type="number" [(ngModel)]="producto.precio" name="precio" required/>
+    <input type="number" formControlName="precio" required/>
   </label>
 
   <br><br>
 
   <label>
     Activo:
-    <input type="checkbox" [(ngModel)]="producto.activo" name="activo"/>
+    <input type="checkbox" formControlName="activo"/>
   </label>
 
   <br><br>
 
-  <button type="submit" [disabled]="cargando">
+  <button type="submit">
     Guardar
   </button>
 
 </form>
-
+@if (mensaje) {
+  <p style="color: green; font-weight: bold">{{ mensaje }}</p>
+}
 @if (error) {
   <p style="color: red"> {{ error }} </p>
 }
