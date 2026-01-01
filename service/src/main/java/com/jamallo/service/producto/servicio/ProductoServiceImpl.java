@@ -68,6 +68,7 @@ public class ProductoServiceImpl implements ProductoService {
         productoRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public ProductoResponseDTO actualizar(Long id, ProductoRequestDTO dto) {
         Producto existente = productoRepository
@@ -76,8 +77,9 @@ public class ProductoServiceImpl implements ProductoService {
 
         ProductoMapper.actualizarEntidad(existente, dto);
 
+        Producto actualizado = productoRepository.save(existente);
 
-        return ProductoMapper.toResponseDTO(productoRepository.save(existente));
+        return ProductoMapper.toResponseDTO(actualizado);
     }
 
     @Override
