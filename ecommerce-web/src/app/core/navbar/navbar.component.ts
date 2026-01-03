@@ -10,22 +10,6 @@ import { AuthService } from "../../auth/auth.service";
   imports: [CommonModule, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
-  /* template: `
-    <nav style="padding: 10px; background: #eee">
-      @if (!isLogged()) {
-        <button (click)="goLogin()">Login</button>
-      }
-
-      @if (isLogged()) {
-        <button (click)="goPrueba()">Prueba</button>
-        <button (click)="logout()">Deslogarse</button>
-      }
-
-      @if (isLogged() && isAdmin()) {
-        <button (click)="goAdmin()"> Admin </button>
-      }
-    </nav>
-    ` */
 })
 export class NavbarComponent {
 
@@ -59,3 +43,21 @@ export class NavbarComponent {
     this.router.navigate(['/admin']);
   }
 }
+
+
+/* template: `
+  <nav style="padding: 10px; background: #eee">
+    @if (!isLogged()) {
+      <button (click)="goLogin()">Login</button>
+    }
+
+    @if (isLogged()) {
+      <button (click)="goPrueba()">Prueba</button>
+      <button (click)="logout()">Deslogarse</button>
+    }
+
+    @if (isLogged() && isAdmin()) {
+      <button (click)="goAdmin()"> Admin </button>
+    }
+  </nav>
+  ` */

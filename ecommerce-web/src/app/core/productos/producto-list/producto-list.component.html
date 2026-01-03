@@ -15,7 +15,7 @@
 } @else if (productos.length === 0) {
   <p>No hay productos disponibles</p>
 } @else {
-  <table border="1" cellpadding="8">
+  <table border="1" cellpadding="8" *ngIf="productos.length > 0">
     <thead>
       <tr>
         <th>Nombre</th>
@@ -37,7 +37,7 @@
             <button [routerLink]="['/productos/editar', producto.id]">
               Editar
             </button>
-            <button (click)="eliminar(producto.id)">
+            <button (click)="pedirConfirmacion(producto.id)">
               Eliminar
             </button>
           </td>
@@ -57,6 +57,9 @@
   <div class="modal-backdrop">
     <div class="modal">
       <p>¿Seguro que deseas eliminar este producto?</p>
+      <button (click)="eliminarConfirmado()" [disabled]="eliminando">
+        {{ eliminando ? 'Eliminando ...' : 'Sí, eliminar' }}</button>
+      <button (click)="cancelarEliminar()" [disabled]="eliminando">Cancelar</button>
     </div>
   </div>
 }

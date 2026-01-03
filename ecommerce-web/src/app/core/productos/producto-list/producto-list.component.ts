@@ -1,10 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { Producto } from "../producto.model";
 import { ProductoService } from "../../service/producto.service";
 import { FormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "../../../auth/auth.service";
+import { finalize } from "rxjs";
+import { NotificationService } from "../../notification/service";
 
 
 @Component({
@@ -19,7 +21,7 @@ export class ProductoListComponent implements OnInit {
 
 
   productos: Producto[] = [];
-  cargando = true;
+  cargando = false;
 
 
 
@@ -42,9 +44,16 @@ export class ProductoListComponent implements OnInit {
     precioMax: undefined as number | undefined,
   };
 
+  productoAEliminar ?: number | null = null;
+  mostrarConfirmacion = false;
+  eliminando = false;
+
+
   constructor(
     private productoService: ProductoService,
-    private authService: AuthService) {}
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private cdr: ChangeDetectorRef) {}
 
   get esAdmin(): boolean {
     return this.authService.isAdmin();
@@ -52,6 +61,7 @@ export class ProductoListComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log('ngOnInit ejecutado')
     this.cargarProdutos();
   }
 
@@ -92,7 +102,12 @@ export class ProductoListComponent implements OnInit {
   }
 
   cargarProdutos(): void {
+    console.log('Cargando productos...', {
+      pagina: this.paginaActual,
+      filtros: this.filtros
+    });
     this.cargando = true;
+    this.error = '';
 
     this.productoService
     .listarPaginado(
@@ -100,70 +115,72 @@ export class ProductoListComponent implements OnInit {
       this.tamanioPaginas,
       this.filtros,
       this.sortBy,
-      this.direccion)
-    .subscribe({
-      next: (response) => {
-        console.log('Productos recibidos: ', response);
-
-        this.productos = response.contenido;
-        this.totalPaginas = response.totalPaginas;
-        this.totalElementos = response.totalElementos;
-        this.paginaActual = response.paginaActual;
-        this.tamanioPaginas = response.tamanioPaginas;
+      this.direccion
+      )
+      .pipe(
+        finalize(() => {
         this.cargando = false;
+        this.cdr.detectChanges();
+      }))
+          .subscribe({
+          next: (response) => {
+            console.log('Productos recibidos: ', response);
+
+            this.productos = response.contenido || [];
+            this.totalPaginas = response.totalPaginas || 0;
+            this.totalElementos = response.totalElementos || 0;
+            this.paginaActual = response.paginaActual || 0;
+            this.tamanioPaginas = response.tamanioPaginas || 10;
+            console.log('Estado despues de carga: ', {
+              producto:this.productos.length,
+              totalPaginas: this.totalPaginas
+            });
       },
       error: (err) => {
         console.error('ERROR cargando productos: ', err);
-        this.cargando = false;
+        this.error = 'Error cargando productos';
       }
     });
   }
 
-  eliminar(id: number): void {
 
 
-
-    if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
-
-    this.productoService.eliminar(id).subscribe({
-      next: () => {
-        this.mensaje = 'Producto eliminado correctamente';
-        this.cargarProdutos();
-        setTimeout(() => this.mensaje = '', 3000);
-      },
-      error: err => {
-        this.error = 'Error al eliminar el producto';
-        console.error(err);
-      }
-    });
-  }
-
-  productoAEliminar ?: number;
-  mostrarConfirmacion = false;
-
-  confirmarEliminar(id: number) {
+  pedirConfirmacion(id: number): void{
     this.productoAEliminar = id;
     this.mostrarConfirmacion = true;
   }
 
-  cancelarEliminar() {
-    this.productoAEliminar = undefined;
+  cancelarEliminar(): void {
+    this.productoAEliminar = null;
     this.mostrarConfirmacion = false;
+    this.eliminando = false;
   }
 
   eliminarConfirmado() {
-    if (this.productoAEliminar === undefined) return;
+    if (!this.productoAEliminar) return;
 
-    this.productoService.eliminar(this.productoAEliminar).subscribe({
-      next: () => {
-        this.mensaje = 'Producto eliminado correctamente';
+    const id = this.productoAEliminar;
+
+    this.eliminando = true;
+
+    this.productoService.eliminar(id)
+    .pipe(
+      finalize(() => {
+        this.eliminando = false;
         this.mostrarConfirmacion = false;
-        this.productoAEliminar = undefined;
+        this.productoAEliminar = null;
         this.cargarProdutos();
+        this.cdr.detectChanges();
+      })
+    )
+    .subscribe({
+      next: () => {
+        this.notificationService.success('Producto eliminado correctamente');
+        this.cargarProdutos();
+        this.cdr.detectChanges();
       },
-      error: err => {
-        this.error = 'Error al eliminar el producto';
-        console.error(err);
+      error: () => {
+        this.notificationService.error('Error al eliminar el producto')
       }
     });
   }
@@ -172,8 +189,24 @@ export class ProductoListComponent implements OnInit {
     return this.authService.isAdmin();
   }
 
-  trackById(index: number, producto: Producto) {
+  trackById(index: number, producto: Producto): number {
     return producto.id;
   }
 
 }
+
+
+        /* eliminar(id: number): void {
+
+          this.productoService.eliminar(id).subscribe({
+            next: () => {
+              this.mensaje = 'Producto eliminado correctamente';
+              this.cargarProdutos();
+              setTimeout(() => this.mensaje = '', 3000);
+            },
+            error: err => {
+              this.error = 'Error al eliminar el producto';
+              console.error(err);
+            }
+          });
+        } */

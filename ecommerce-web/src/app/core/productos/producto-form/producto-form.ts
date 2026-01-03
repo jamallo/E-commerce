@@ -14,13 +14,6 @@ export class ProductoForm implements OnInit{
 
   form!: FormGroup;
 
-  producto = {
-    nombre: '',
-    descripcion: '',
-    precio: null as number | null,
-    activo: true
-  };
-
   cargando = false;
   error = '';
   mensaje = '';
