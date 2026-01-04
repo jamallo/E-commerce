@@ -7,12 +7,14 @@ import { RouterLink } from "@angular/router";
 import { AuthService } from "../../../auth/auth.service";
 import { finalize } from "rxjs";
 import { NotificationService } from "../../notification/service";
+import { ConfirmService } from "../../ui/confirm-modal/confirm";
+import { HasRoleDirective } from "../../directives/has-role";
 
 
 @Component({
   selector: 'app-producto-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective],
   templateUrl: './producto-list.component.html',
   styleUrls: ['./producto-list.component.css']
 })
@@ -21,7 +23,7 @@ export class ProductoListComponent implements OnInit {
 
 
   productos: Producto[] = [];
-  cargando = false;
+  //cargando = false;
 
 
 
@@ -30,11 +32,9 @@ export class ProductoListComponent implements OnInit {
   totalElementos = 0;
   paginaActual= 0;
   tamanioPaginas = 10;
-  sortBy = "id";
-  direccion = 'ASC';
 
   mensaje = '';
-  error = '';
+  //error = '';
 
 
   filtros = {
@@ -43,21 +43,26 @@ export class ProductoListComponent implements OnInit {
     precioMin: undefined as number | undefined,
     precioMax: undefined as number | undefined,
   };
+  sortBy = "id";
+  direccion = 'ASC';
 
-  productoAEliminar ?: number | null = null;
+  /* productoAEliminar ?: number | null = null;
   mostrarConfirmacion = false;
-  eliminando = false;
+  eliminando = false; */
 
 
   constructor(
     private productoService: ProductoService,
-    private authService: AuthService,
+    //private authService: AuthService,
     private notificationService: NotificationService,
-    private cdr: ChangeDetectorRef) {}
+    private confirmService: ConfirmService
+    //private cdr: ChangeDetectorRef
+    )
+    {}
 
-  get esAdmin(): boolean {
+  /* get esAdmin(): boolean {
     return this.authService.isAdmin();
-  }
+  } */
 
 
   ngOnInit(): void {
@@ -106,8 +111,8 @@ export class ProductoListComponent implements OnInit {
       pagina: this.paginaActual,
       filtros: this.filtros
     });
-    this.cargando = true;
-    this.error = '';
+    //this.cargando = true;
+    //this.error = '';
 
     this.productoService
     .listarPaginado(
@@ -117,11 +122,11 @@ export class ProductoListComponent implements OnInit {
       this.sortBy,
       this.direccion
       )
-      .pipe(
+      /* .pipe(
         finalize(() => {
-        this.cargando = false;
+        //this.cargando = false;
         this.cdr.detectChanges();
-      }))
+      })) */
           .subscribe({
           next: (response) => {
             console.log('Productos recibidos: ', response);
@@ -138,25 +143,45 @@ export class ProductoListComponent implements OnInit {
       },
       error: (err) => {
         console.error('ERROR cargando productos: ', err);
-        this.error = 'Error cargando productos';
+        //this.error = 'Error cargando productos';
       }
     });
   }
 
 
 
-  pedirConfirmacion(id: number): void{
+  /* pedirConfirmacion(id: number): void{
     this.productoAEliminar = id;
     this.mostrarConfirmacion = true;
+  } */
+
+  pedirConfirmacion(id: number): void {
+    this.confirmService.confirm({
+      title: 'Eliminar producto',
+      message: '¿Seguro que deseas eliminar este producto?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar'
+    }).subscribe(confirmado => {
+      if (confirmado) {
+        this.eliminarProducto(id);
+      }
+    });
   }
 
-  cancelarEliminar(): void {
+  eliminarProducto(id: number): void {
+    this.productoService.eliminar(id).subscribe({
+      next: () => this.notificationService.success('Producto eliminado'),
+      error: () => this.notificationService.error('Error al eliminar')
+    });
+  }
+
+  /* cancelarEliminar(): void {
     this.productoAEliminar = null;
     this.mostrarConfirmacion = false;
     this.eliminando = false;
-  }
+  } */
 
-  eliminarConfirmado() {
+   /* eliminarConfirmado() {
     if (!this.productoAEliminar) return;
 
     const id = this.productoAEliminar;
@@ -176,18 +201,13 @@ export class ProductoListComponent implements OnInit {
     .subscribe({
       next: () => {
         this.notificationService.success('Producto eliminado correctamente');
-        this.cargarProdutos();
         this.cdr.detectChanges();
       },
       error: () => {
         this.notificationService.error('Error al eliminar el producto')
       }
     });
-  }
-
-  isAdmin(): boolean {
-    return this.authService.isAdmin();
-  }
+  } */
 
   trackById(index: number, producto: Producto): number {
     return producto.id;

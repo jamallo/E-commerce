@@ -2,12 +2,13 @@ import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../auth/auth.service";
+import { HasRoleDirective } from "../directives/has-role";
 
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HasRoleDirective],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -18,7 +19,7 @@ export class NavbarComponent {
     private router: Router
   ) {}
 
-  isLogged(): boolean {
+  get isLogged(): boolean {
     return this.authService.isLogged();
   }
 
@@ -35,9 +36,9 @@ export class NavbarComponent {
     this.router.navigate(['/prueba']);
   }
 
-  isAdmin(): boolean {
+  /* get esAdmin(): boolean {
     return this.authService.isAdmin();
-  }
+  } */
 
   goAdmin(): void {
     this.router.navigate(['/admin']);

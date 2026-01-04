@@ -1,11 +1,11 @@
 <nav class="navbar">
 
-      @if (isLogged()) {
+      @if (isLogged) {
         <a routerLink="/productos">Productos</a>
 
-        @if (isAdmin()) {
-          <a routerLink = "/productos/nuevo">Nuevo producto</a>
-        }
+
+          <a *appHasRole="['ADMIN']" routerLink = "/productos/nuevo">Nuevo producto</a>
+
         <button (click)="logout()">Deslogarse</button>
       } @else {
         <a routerLink ="/login">Login</a>
