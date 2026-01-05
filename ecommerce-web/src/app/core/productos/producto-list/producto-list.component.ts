@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, ElementRef, ViewChild } from "@angular/core";
 import { Producto } from "../producto.model";
 import { ProductoService } from "../../service/producto.service";
 import { FormsModule } from "@angular/forms";
@@ -9,21 +9,24 @@ import { finalize } from "rxjs";
 import { NotificationService } from "../../notification/service";
 import { ConfirmService } from "../../ui/confirm-modal/confirm";
 import { HasRoleDirective } from "../../directives/has-role";
+import { ProductCardComponent } from "../product-card/product-card";
 
 
 @Component({
   selector: 'app-producto-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective],
+  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, ProductCardComponent],
   templateUrl: './producto-list.component.html',
   styleUrls: ['./producto-list.component.css']
 })
 
-export class ProductoListComponent implements OnInit {
+export class ProductoListComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('sentinelaScroll') sentinelaScroll!: ElementRef;
 
 
   productos: Producto[] = [];
-  //cargando = false;
+  cargando = false;
 
 
 
@@ -45,6 +48,7 @@ export class ProductoListComponent implements OnInit {
   };
   sortBy = "id";
   direccion = 'ASC';
+  hayMasProductos = true;
 
   /* productoAEliminar ?: number | null = null;
   mostrarConfirmacion = false;
@@ -67,6 +71,31 @@ export class ProductoListComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('ngOnInit ejecutado')
+    this.cargarProdutos();
+  }
+
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(entries => {
+      if (
+        entries[0].isIntersecting &&
+        !this.cargando &&
+        this.hayMasProductos
+      ) {
+        this.cargarMasProductos();
+
+      }
+    });
+
+    observer.observe(this.sentinelaScroll.nativeElement);
+  }
+
+  cargarMasProductos(): void {
+    if (this.paginaActual >= this.totalPaginas -1) {
+      this.hayMasProductos = false;
+      return;
+    }
+
+    this.paginaActual++;
     this.cargarProdutos();
   }
 
@@ -122,16 +151,17 @@ export class ProductoListComponent implements OnInit {
       this.sortBy,
       this.direccion
       )
-      /* .pipe(
+      .pipe(
         finalize(() => {
-        //this.cargando = false;
-        this.cdr.detectChanges();
-      })) */
+        this.cargando = false;
+        //this.cdr.detectChanges();
+      }))
           .subscribe({
           next: (response) => {
             console.log('Productos recibidos: ', response);
 
-            this.productos = response.contenido || [];
+            this.productos = [...this.productos, ...response.contenido];
+            this.hayMasProductos = this.paginaActual < this.totalPaginas -1;
             this.totalPaginas = response.totalPaginas || 0;
             this.totalElementos = response.totalElementos || 0;
             this.paginaActual = response.paginaActual || 0;
@@ -144,6 +174,7 @@ export class ProductoListComponent implements OnInit {
       error: (err) => {
         console.error('ERROR cargando productos: ', err);
         //this.error = 'Error cargando productos';
+        this.hayMasProductos = false;
       }
     });
   }

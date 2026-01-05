@@ -33,6 +33,7 @@
           </td>
 
         </tr>
+
       }
     </tbody>
   </table>
@@ -41,28 +42,28 @@
   <div style="margin-top: 16px;" class="paginacion">
 
     <button
-      (click)="paginaAnterior()"
-      [disabled]="paginaActual === 0">
-      ⬅ Anterior
-    </button>
+    (click)="paginaAnterior()"
+    [disabled]="paginaActual === 0">
+    ⬅ Anterior
+  </button>
 
-    <span style="margin: 0 12px;">
+  <span style="margin: 0 12px;">
       Página {{ paginaActual + 1 }} de {{ totalPaginas }}
     </span>
 
     <button
-      (click)="paginaSiguiente()"
-      [disabled]="paginaActual === totalPaginas -1">
-      Siguiente ➡
-    </button>
-  </div>
-
-  <button
-    *appHasRole="['ADMIN']"
-    [routerLink]="['/productos/nuevo']"
-    style="margin-top: 16px;">
-    Nuevo producto
+    (click)="paginaSiguiente()"
+    [disabled]="paginaActual === totalPaginas -1">
+    Siguiente ➡
   </button>
+</div>
+
+<button
+*appHasRole="['ADMIN']"
+[routerLink]="['/productos/nuevo']"
+style="margin-top: 16px;">
+Nuevo producto
+</button>
 }
 
 <hr>
@@ -72,21 +73,21 @@
 <input type="text" placeholder="Nombre" [(ngModel)]="filtros.nombre"/>
 
 <select [(ngModel)]="filtros.activo">
-    <option [ngValue]="undefined">Todos</option>
-    <option [ngValue]="true">Activos</option>
-    <option [ngValue]="false">Inactivos</option>
+  <option [ngValue]="undefined">Todos</option>
+  <option [ngValue]="true">Activos</option>
+  <option [ngValue]="false">Inactivos</option>
 </select>
 
 <input
-  type="number"
-  placeholder="Precio mínimo"
-  [(ngModel)]="filtros.precioMin"
+type="number"
+placeholder="Precio mínimo"
+[(ngModel)]="filtros.precioMin"
 />
 
 <input
-  type="number"
-  placeholder="Precio máximo"
-  [(ngModel)]="filtros.precioMax"
+type="number"
+placeholder="Precio máximo"
+[(ngModel)]="filtros.precioMax"
 />
 
 <button (click)="aplicarFiltros()">Aplicar filtros</button>
@@ -112,6 +113,15 @@
   Limpiar filtros
 </button>
 
+@for (producto of productos; track producto.id) {
+  <app-product-card [producto]="producto" />
+}
+
+<div #sentinelaSroll class="sentinela-scroll"></div>
+
+@if (cargando) {
+  <p style="text-align: center;"> Cargando más productos </p>
+}
 
 <!-- <h2>Listado de productos</h2>
 

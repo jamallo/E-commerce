@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpinnerService } from './spinner.service';
 
 @Component({
@@ -11,6 +11,6 @@ import { SpinnerService } from './spinner.service';
 })
 export class SpinnerComponent {
 
-  constructor(public spinner: SpinnerService) {}
+  $spinner = inject(SpinnerService).loading$;
 
 }
