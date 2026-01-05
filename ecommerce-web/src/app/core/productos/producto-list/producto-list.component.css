@@ -44,3 +44,9 @@
   height: 1px;
 }
 
+.feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+

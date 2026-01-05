@@ -5,6 +5,12 @@
 
 
           <a *appHasRole="['ADMIN']" routerLink = "/productos/nuevo">Nuevo producto</a>
+          <a routerLink="/cesta" class="cesta">
+            🛒 Cesta
+            @if (totalCesta > 0) {
+              <span class="bagne">{{ totalCesta }}</span>
+            }
+          </a>
 
         <button (click)="logout()">Deslogarse</button>
       } @else {

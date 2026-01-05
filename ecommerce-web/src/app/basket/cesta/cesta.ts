@@ -1,0 +1,43 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { BasketItem } from '../../shared/basket/basket.model';
+import { BasketService } from '../../shared/basket/basket';
+
+@Component({
+  selector: 'app-cesta',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './cesta.html',
+  styleUrl: './cesta.css',
+})
+export class CestaComponent implements OnInit {
+
+  items: BasketItem[] = [];
+  total = 0;
+
+  constructor(private basketService: BasketService) {}
+
+  ngOnInit(): void {
+    this.basketService.items$.subscribe(items => {
+      this.items = items;
+      this.total = this.basketService.getTotal();
+    });
+  }
+
+  sumar(item: BasketItem): void {
+    this.basketService.add(item.product);
+  }
+
+  restar(item: BasketItem): void {
+    this.basketService.decrease(item.product.id);
+  }
+
+  eliminar(productId: number): void {
+    this.basketService.remove(productId);
+  }
+
+  vaciar(): void {
+    this.basketService.clear();
+  }
+
+}

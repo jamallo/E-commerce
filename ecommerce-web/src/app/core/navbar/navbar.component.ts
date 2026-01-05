@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../auth/auth.service";
 import { HasRoleDirective } from "../directives/has-role";
+import { BasketService } from "../../shared/basket/basket";
 
 
 @Component({
@@ -12,12 +13,24 @@ import { HasRoleDirective } from "../directives/has-role";
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
+
+  totalCesta = 0;
 
   constructor(
     private authService: AuthService,
+    private basketService: BasketService,
     private router: Router
   ) {}
+
+  ngOnInit(): void {
+    this.basketService.items$.subscribe(items => {
+      this.totalCesta = items.reduce(
+        (total, items) => total + items.quantity,
+        0
+      );
+    });
+  }
 
   get isLogged(): boolean {
     return this.authService.isLogged();

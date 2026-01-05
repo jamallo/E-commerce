@@ -5,13 +5,14 @@
 @if  (productos.length === 0) {
   <p>No hay productos disponibles</p>
 } @else {
-  <table border="1" cellpadding="8">
+  <table *appHasRole="['ADMIN']"   border="1" cellpadding="8">
     <thead>
       <tr>
         <th>Nombre</th>
         <th>Descripción</th>
         <th>Precio</th>
         <th>Activo</th>
+        <th>Imagen</th>
         <th *appHasRole="['ADMIN']">Acciones</th>
       </tr>
     </thead>
@@ -22,8 +23,9 @@
           <td>{{ producto.descripcion }}</td>
           <td>{{ producto.precio }} €</td>
           <td>{{ producto.activo ? 'Sí' : 'No' }}</td>
+          <td>{{ producto.imagenUrl }}</td>
 
-          <td *appHasRole="['ADMIN']">
+          <td> //*appHasRole="['ADMIN']"
             <button [routerLink]="['/productos/editar', producto.id]">
               Editar
             </button>
@@ -39,7 +41,7 @@
   </table>
 
 
-  <div style="margin-top: 16px;" class="paginacion">
+  <div *appHasRole="['ADMIN']" style="margin-top: 16px;" class="paginacion">
 
     <button
     (click)="paginaAnterior()"
@@ -113,9 +115,11 @@ placeholder="Precio máximo"
   Limpiar filtros
 </button>
 
+<div class="feed">
 @for (producto of productos; track producto.id) {
-  <app-product-card [producto]="producto" />
+  <app-tarjeta-producto [producto]="producto" />
 }
+</div>
 
 <div #sentinelaSroll class="sentinela-scroll"></div>
 

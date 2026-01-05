@@ -1,0 +1,22 @@
+<div class="tarjeta">
+
+  <div class="imagen">
+    @if (producto.imagenUrl) {
+      <img [src]="producto.imagenUrl" alt="Producto"/>
+    }@else {
+      <img src="https://picsum.photos/400/400" alt="Producto"/>"
+    }
+
+  </div>
+
+  <div class="contenido">
+    <h3>{{ producto.nombre }}</h3>
+
+    @if (producto.descripcion) {
+      <p class="descripcion">{{ producto.descripcion }}</p>
+    }
+
+    <div class="precio">{{producto.precio }}€</div>
+
+    <button class="btn-comprar" (click)="aniadirACesta()">Añadir a la cesta</button>
+  </div>

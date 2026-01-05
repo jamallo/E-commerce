@@ -15,5 +15,6 @@ export const routes: Routes = [
   { path: 'productos', component: ProductoListComponent},
   //{ path: 'productos/nuevo', component: ProductoForm, canActivate: [authGuard], data: { role: 'ADMIN' }},
   { path: 'productos/nuevo', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}},
-  { path: 'productos/editar/:id', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}}
+  { path: 'productos/editar/:id', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}},
+  { path: 'cesta', loadComponent: () => import('./basket/cesta/cesta').then(m => m.CestaComponent)}
 ];

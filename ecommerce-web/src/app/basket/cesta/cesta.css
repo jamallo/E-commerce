@@ -1,0 +1,37 @@
+.item-cesta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.acciones button {
+  margin: 0 4px;
+}
+
+.eliminar {
+  background: none;
+  border: none;
+  color: red;
+}
+
+.total {
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.comprar {
+  width: 100%;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
+  margin-top: 12px;
+}
+
+.vaciar {
+  width: 100%;
+  margin-top: 8px;
+}
+

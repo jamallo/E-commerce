@@ -10,12 +10,13 @@ import { NotificationService } from "../../notification/service";
 import { ConfirmService } from "../../ui/confirm-modal/confirm";
 import { HasRoleDirective } from "../../directives/has-role";
 import { ProductCardComponent } from "../product-card/product-card";
+import { TarjetaProductoComponent } from "../tarjeta-producto/tarjeta-producto";
 
 
 @Component({
   selector: 'app-producto-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, ProductCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, TarjetaProductoComponent], 
   templateUrl: './producto-list.component.html',
   styleUrls: ['./producto-list.component.css']
 })

@@ -1,0 +1,45 @@
+.tarjeta {
+  width: 100%;
+  max-width: 420px;
+  margin: 16px auto;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.imagen img {
+  width: 100%;
+  display: block;
+}
+
+.contenido {
+  padding: 12px;
+}
+
+.contenido h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.descripcion {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 6px 0;
+}
+
+.precio {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.btn-comprar {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

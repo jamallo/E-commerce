@@ -33,7 +33,8 @@ export class ProductoForm implements OnInit{
       nombre: ['', Validators.required],
       descripcion: [''],
       precio: [0, [Validators.required, Validators.min(0.01)]],
-      activo: [true]
+      activo: [true],
+      imagenUrl: ['']
     });
     const id = this.route.snapshot.paramMap.get('id');
 

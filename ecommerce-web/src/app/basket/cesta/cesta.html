@@ -1,0 +1,30 @@
+<h2>Tu cesta</h2>
+
+@if (items.length === 0) {
+  <p>Tu cesta está vacía</p>
+} @else {
+
+  <div class="item-cesta" **ngFor="let item of items">
+    <div class="info">
+      <strong>{{ item.product.nombre }}</strong>
+      <p>{{ item.product.precio }}</p>
+    </div>
+
+    <div class="acciones">
+      <button (click)="restar(item)">-</button>
+      <span>{{ item.quantity }}</span>
+      <button (click)="sumar(item)">+</button>
+      <button class="eliminar" (click)="eliminar(item.product.id)">🗑</button>
+    </div>
+  </div>
+
+  <hr>
+
+  <p class="total">
+    Total: <strong>{{ total }}</strong>
+  </p>
+
+  <button class="vaciar" (click)="vaciar()">Vaciar cesta</button>
+
+  <button class="comprar">Finalizar compra</button>
+}

@@ -4,4 +4,5 @@ export interface Producto {
   descripcion: String;
   precio: number;
   activo: boolean;
+  imagenUrl?: string;
 }
