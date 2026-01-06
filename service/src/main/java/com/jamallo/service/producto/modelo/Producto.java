@@ -34,5 +34,10 @@ public class Producto {
     @Setter
     private boolean activo = true;
 
+    @Setter
+    @Getter
+    @Column(length = 500)
+    private String imagenUrl;
+
 
 }

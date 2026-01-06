@@ -16,4 +16,5 @@ public class ProductoResponseDTO {
     private String descripcion;
     private BigDecimal precio;
     private Boolean activo;
+    private String imagenUrl;
 }

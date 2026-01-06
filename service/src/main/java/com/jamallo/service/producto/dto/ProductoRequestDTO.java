@@ -22,4 +22,6 @@ public class ProductoRequestDTO {
     private BigDecimal precio;
 
     private Boolean activo = true;
+
+    private String imagenUrl;
 }
