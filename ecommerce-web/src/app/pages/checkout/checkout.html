@@ -1,0 +1,50 @@
+<h2>Resumen de tu pedido</h2>
+
+@if (items.length === 0) {
+  <p>No hay productos en la cesta</p>
+} @else {
+
+  @for (item of items; track item.product.id) {
+    <div class="resumen-item">
+      <span>
+        {{ item.product.nombre }} x {{ item.quantity }}
+      </span>
+      <span>
+        {{ item.product.precio * item.quantity }}€
+      </span>
+    </div>
+  }
+
+  <hr>
+
+  <p class="total">
+    Total a pagar: <strong>{{ total }}€</strong>
+  </p>
+
+  <!--FORMULARIO DE ENVÍO-->
+
+  <form [formGroup]="formularioEnvio" (ngSubmit) = "continuar()">
+
+    <h3>Datos de envío</h3>
+
+    <input type="text" placeholder="Nombre" formControlName="nombre"/>
+
+    @if (formularioEnvio.get('nombre')?.touched && formularioEnvio.get('nombre')?.invalid) {
+      <small class="error">El nombre es obligatorio</small>
+    }
+
+    <input type="text" placeholder="Apellidos" formControlName="apellidos"/>
+
+    <input type="text" placeholder="Direccion" formControlName="direccion"/>
+
+    <input type="text" placeholder="Ciudad" formControlName="ciudad"/>
+
+    <input type="text" placeholder="Codigo Postal" formControlName="codigoPostal"/>
+
+    <input type="text" placeholder="Telefono" formControlName="telefono"/>
+
+    <button type="submit">
+      Continuar con el pedido
+    </button>
+  </form>
+}

@@ -6,6 +6,7 @@ import { AdminComponent } from './admin/admin.component';
 import { roleGuard } from './core/guards/role.guard';
 import { ProductoListComponent } from './core/productos/producto-list/producto-list.component';
 import { ProductoForm } from './core/productos/producto-form/producto-form';
+import { CheckoutComponet } from './pages/checkout/checkout';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -16,5 +17,6 @@ export const routes: Routes = [
   //{ path: 'productos/nuevo', component: ProductoForm, canActivate: [authGuard], data: { role: 'ADMIN' }},
   { path: 'productos/nuevo', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}},
   { path: 'productos/editar/:id', component: ProductoForm, canActivate: [roleGuard], data: {roles: ['ADMIN']}},
-  { path: 'cesta', loadComponent: () => import('./basket/cesta/cesta').then(m => m.CestaComponent)}
+  { path: 'cesta', loadComponent: () => import('./basket/cesta/cesta').then(m => m.CestaComponent)},
+  { path: 'checkout', component: CheckoutComponet, canActivate: [authGuard]}
 ];

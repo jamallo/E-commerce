@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BasketItem } from '../../shared/basket/basket.model';
 import { BasketService } from '../../shared/basket/basket';
+import { ConfirmacionService } from '../../shared/confirmacion/confirmacion.service';
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-cesta',
@@ -15,7 +17,11 @@ export class CestaComponent implements OnInit {
   items: BasketItem[] = [];
   total = 0;
 
-  constructor(private basketService: BasketService) {}
+  constructor(
+    private basketService: BasketService,
+    private confirmacionService: ConfirmacionService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.basketService.items$.subscribe(items => {
@@ -37,7 +43,20 @@ export class CestaComponent implements OnInit {
   }
 
   vaciar(): void {
-    this.basketService.clear();
+    this.confirmacionService.confirmar({
+      titulo: 'Vaciar cesta',
+      mensaje: '¿Seguro que quieres eliminar todos los productos?',
+      textoConfirmar: 'Vaciar',
+      textoCancelar: 'Cancelar'
+    }).subscribe(confirmado => {
+      if (confirmado) {
+        this.basketService.clear();
+      }
+    });
+
   }
 
+  finalizarCompra(): void {
+    this.router.navigate(['/checkout']);
+  }
 }
