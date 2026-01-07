@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { BasketItem } from '../../shared/basket/basket.model';
 import { BasketService } from '../../shared/basket/basket';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { PedidoService } from '../../shared/pedido/pedido.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -20,7 +22,9 @@ export class CheckoutComponet implements OnInit {
 
   constructor(
     private backetService: BasketService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private pedidoService: PedidoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +55,20 @@ export class CheckoutComponet implements OnInit {
     console.log('Datos de envío: ', datosEnvio);
 
     //TODO: guardar dirección, crear pedido, ir al pago
+  }
+
+  confirmarCompra(): void {
+    const pedido = {
+      items: this.backetService['itemsSubject'].value,
+      direccion: this.formularioEnvio.value,
+      total: this.backetService.getTotal(),
+      fecha: new Date()
+    };
+
+    this.pedidoService.crearPedido(pedido);
+    this.backetService.clear();
+
+    this.router.navigate(['/checkout/exito']);
   }
 
 }

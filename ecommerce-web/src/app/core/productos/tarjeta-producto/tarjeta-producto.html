@@ -1,15 +1,14 @@
-<div class="tarjeta">
+<div class="tarjeta" [class.skeleton] = "skeleton">
 
   <div class="imagen">
-    @if (producto.imagenUrl) {
-      <img [src]="producto.imagenUrl" alt="Producto"/>
-    }@else {
-      <img src="https://picsum.photos/400/400" alt="Producto"/>"
+    @if (!skeleton) {
+      <img [src]="producto.imagenUrl || 'http://picsum.photos/400/400'" alt="Producto"/>
     }
 
   </div>
 
   <div class="contenido">
+    @if (!skeleton) {
     <h3>{{ producto.nombre }}</h3>
 
     @if (producto.descripcion) {
@@ -19,4 +18,6 @@
     <div class="precio">{{producto.precio }}€</div>
 
     <button class="btn-comprar" (click)="aniadirACesta()">Añadir a la cesta</button>
+    }
   </div>
+</div>

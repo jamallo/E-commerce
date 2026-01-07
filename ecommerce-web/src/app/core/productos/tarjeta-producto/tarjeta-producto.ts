@@ -14,8 +14,9 @@ import { NotificationService } from '../../notification/service';
 export class TarjetaProductoComponent {
 
 
-  @Input ({ required: true})
-  producto!: Producto;
+  @Input() producto!: Producto;
+
+  @Input() skeleton = false;
 
   constructor(
     private basketService: BasketService,

@@ -9,14 +9,13 @@ import { finalize } from "rxjs";
 import { NotificationService } from "../../notification/service";
 import { ConfirmService } from "../../ui/confirm-modal/confirm";
 import { HasRoleDirective } from "../../directives/has-role";
-import { ProductCardComponent } from "../product-card/product-card";
 import { TarjetaProductoComponent } from "../tarjeta-producto/tarjeta-producto";
 
 
 @Component({
   selector: 'app-producto-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, TarjetaProductoComponent], 
+  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, TarjetaProductoComponent],
   templateUrl: './producto-list.component.html',
   styleUrls: ['./producto-list.component.css']
 })
@@ -78,10 +77,7 @@ export class ProductoListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(entries => {
       if (
-        entries[0].isIntersecting &&
-        !this.cargando &&
-        this.hayMasProductos
-      ) {
+        entries[0].isIntersecting) {
         this.cargarMasProductos();
 
       }
@@ -91,12 +87,10 @@ export class ProductoListComponent implements OnInit, AfterViewInit {
   }
 
   cargarMasProductos(): void {
-    if (this.paginaActual >= this.totalPaginas -1) {
-      this.hayMasProductos = false;
+    if (this.cargando || !this.hayMasProductos) {
       return;
     }
 
-    this.paginaActual++;
     this.cargarProdutos();
   }
 
@@ -137,11 +131,7 @@ export class ProductoListComponent implements OnInit, AfterViewInit {
   }
 
   cargarProdutos(): void {
-    console.log('Cargando productos...', {
-      pagina: this.paginaActual,
-      filtros: this.filtros
-    });
-    //this.cargando = true;
+    this.cargando = true;
     //this.error = '';
 
     this.productoService
@@ -162,11 +152,11 @@ export class ProductoListComponent implements OnInit, AfterViewInit {
             console.log('Productos recibidos: ', response);
 
             this.productos = [...this.productos, ...response.contenido];
-            this.hayMasProductos = this.paginaActual < this.totalPaginas -1;
             this.totalPaginas = response.totalPaginas || 0;
             this.totalElementos = response.totalElementos || 0;
-            this.paginaActual = response.paginaActual || 0;
             this.tamanioPaginas = response.tamanioPaginas || 10;
+            this.paginaActual = response.paginaActual || 0;
+            this.hayMasProductos = this.paginaActual < this.totalPaginas -1;
             console.log('Estado despues de carga: ', {
               producto:this.productos.length,
               totalPaginas: this.totalPaginas

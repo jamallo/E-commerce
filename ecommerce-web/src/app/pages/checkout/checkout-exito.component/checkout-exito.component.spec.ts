@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductCardComponent } from './product-card';
+import { CheckoutExitoComponent } from './checkout-exito.component';
 
-describe('ProductCardComponent', () => {
-  let component: ProductCardComponent;
-  let fixture: ComponentFixture<ProductCardComponent>;
+describe('CheckoutExitoComponent', () => {
+  let component: CheckoutExitoComponent;
+  let fixture: ComponentFixture<CheckoutExitoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductCardComponent]
+      imports: [CheckoutExitoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProductCardComponent);
+    fixture = TestBed.createComponent(CheckoutExitoComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

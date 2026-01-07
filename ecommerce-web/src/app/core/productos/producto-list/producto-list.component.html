@@ -119,6 +119,12 @@ placeholder="Precio máximo"
 @for (producto of productos; track producto.id) {
   <app-tarjeta-producto [producto]="producto" />
 }
+
+@if (cargando) {
+  @for (i of [1,2,3]; track i) {
+    <app-tarjeta-producto [skeleton]="true"/>
+  }
+}
 </div>
 
 <div #sentinelaSroll class="sentinela-scroll"></div>

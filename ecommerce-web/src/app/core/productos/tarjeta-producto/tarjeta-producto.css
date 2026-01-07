@@ -1,3 +1,48 @@
+.tarjeta.skeleton {
+  pointer-events: none;
+}
+
+.tarjeta.skeleton .imagen,
+.tarjeta.skeleton .contenido h3,
+.tarjeta.skeleton .descripcion,
+.tarjeta.skeleton .precio,
+.tarjeta.skeleton .btn-comprar {
+  background: linear-gradient(
+    90deg,
+    #eee 25%,
+    #f5f5f5 37%,
+    #eee 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  color: transparent;
+  border-radius: 8px;
+}
+
+.tarjeta.skeleton .imagen{
+  height: 300px;
+}
+
+.tarjeta.skeleton h3 {
+  height: 18px;
+  margin-bottom: 8px;
+}
+
+.tarjeta.skeleton .descripcion{
+  height: 14px;
+  margin-bottom: 6px;
+}
+
+.tarjeta.skeleton .precio{
+  height: 20px;
+  width: 40%;
+  margin-bottom: 10px;
+}
+
+.tarjeta.skeleton .btn-comprar{
+  height: 40px;
+}
+
 .tarjeta {
   width: 100%;
   max-width: 420px;
@@ -42,4 +87,13 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
 }
