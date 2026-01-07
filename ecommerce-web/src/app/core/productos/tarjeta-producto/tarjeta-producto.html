@@ -17,7 +17,7 @@
 
     <div class="precio">{{producto.precio }}€</div>
 
-    <button class="btn-comprar" (click)="aniadirACesta()">Añadir a la cesta</button>
+    <button class="btn-comprar" [class.animar] = "animando" (click)="aniadirACesta()">{{ textoBoton }}</button>
     }
   </div>
 </div>

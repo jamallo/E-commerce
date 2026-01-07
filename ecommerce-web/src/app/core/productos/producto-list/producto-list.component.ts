@@ -22,7 +22,7 @@ import { TarjetaProductoComponent } from "../tarjeta-producto/tarjeta-producto";
 
 export class ProductoListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('sentinelaScroll') sentinelaScroll!: ElementRef;
+  @ViewChild('sentinelaScroll', {static: false}) sentinelaScroll!: ElementRef;
 
 
   productos: Producto[] = [];
@@ -75,6 +75,10 @@ export class ProductoListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+
+    if(!this.sentinelaScroll) {
+      return;
+    }
     const observer = new IntersectionObserver(entries => {
       if (
         entries[0].isIntersecting) {

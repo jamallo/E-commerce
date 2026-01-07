@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { BasketItem } from './basket.model';
 import { Producto } from '../../core/productos/producto.model';
 
@@ -10,6 +10,8 @@ export class BasketService {
 
   private itemsSubject = new BehaviorSubject<BasketItem[]>([]);
   items$ = this.itemsSubject.asObservable();
+
+  productoAniadido$ = new Subject<void>();
 
   constructor() {
     const stored = localStorage.getItem('basket');
@@ -29,6 +31,8 @@ export class BasketService {
     }
 
     this.update(items);
+
+    this.productoAniadido$.next();
   }
 
   decrease(productId: number): void {

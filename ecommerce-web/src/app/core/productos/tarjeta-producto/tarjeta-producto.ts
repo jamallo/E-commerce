@@ -18,6 +18,9 @@ export class TarjetaProductoComponent {
 
   @Input() skeleton = false;
 
+  animando = false;
+  textoBoton = 'Añadir a la cesta';
+
   constructor(
     private basketService: BasketService,
     private notificationService: NotificationService
@@ -26,5 +29,13 @@ export class TarjetaProductoComponent {
   aniadirACesta(): void {
     this.basketService.add(this.producto);
     this.notificationService.success('Producto añadido a la cesta');
+
+    this.animando = true;
+    this.textoBoton = 'Añadido ✓'
+
+    setTimeout(() => {
+      this.animando = false;
+      this.textoBoton = 'Añadir a la cesta';
+    }, 800);
   }
 }

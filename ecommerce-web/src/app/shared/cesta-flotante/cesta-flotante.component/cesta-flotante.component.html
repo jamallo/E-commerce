@@ -1,0 +1,10 @@
+<a
+  routerLink="/cesta"
+  class="cesta-flotante"
+  [class.animar] = "animar">
+  🛒
+
+  @if (totalItems > 0) {
+    <span class="badge">{{ totalItems }}</span>
+  }
+</a>
