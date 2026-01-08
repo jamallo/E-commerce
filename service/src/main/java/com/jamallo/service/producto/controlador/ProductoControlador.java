@@ -3,6 +3,8 @@ package com.jamallo.service.producto.controlador;
 import com.jamallo.service.producto.dto.PaginaResponseDTO;
 import com.jamallo.service.producto.dto.ProductoRequestDTO;
 import com.jamallo.service.producto.dto.ProductoResponseDTO;
+import com.jamallo.service.producto.modelo.Producto;
+import com.jamallo.service.producto.repositorio.ProductoRepository;
 import com.jamallo.service.producto.servicio.ProductoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +28,7 @@ import java.util.Optional;
 public class ProductoControlador {
 
     private final ProductoService productoService;
+    private final ProductoRepository productoRepository;
 
     //Crear producto - SOLO ADMINISTRADOR
     @PreAuthorize("hasRole('ADMIN')")
@@ -85,6 +93,30 @@ public class ProductoControlador {
                         nombre,
                         precioMin,
                         precioMax));
+    }
+
+
+
+    @PostMapping("/{id}/imagen")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> subirImagen(
+            @PathVariable Long id,
+            @RequestParam("imagen")MultipartFile imagen
+            ) throws IOException {
+        Producto producto = productoService.obtenerEntidadPorId(id);
+
+        String nombreArchivo = id + "_" + imagen.getOriginalFilename();
+        Path ruta = Paths.get("uploads/productos/" + nombreArchivo);
+
+        Files.createDirectories(ruta.getParent());
+        Files.write(ruta, imagen.getBytes());
+
+        producto.setImagenUrl("/uploads/productos/" + nombreArchivo);
+        productoService.actualizarImagen(producto);
+
+        return ResponseEntity.ok().build();
+
+
     }
 
     /*@GetMapping

@@ -59,6 +59,7 @@ public class ConfiguracionSeguridadWeb {
                         .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
@@ -68,6 +69,8 @@ public class ConfiguracionSeguridadWeb {
 
         return http.build();
 
+    }
+}
        /* http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //API REST -> sin sesiones
@@ -86,5 +89,3 @@ public class ConfiguracionSeguridadWeb {
                         .authenticated());
 
         return http.build();*/
-    }
-}

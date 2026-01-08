@@ -104,6 +104,15 @@ public class ProductoServiceImpl implements ProductoService {
         return PaginaResponseDTO.fromPage(pagina.map(ProductoMapper::toResponseDTO));
     }
 
+    public Producto obtenerEntidadPorId (Long id) {
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    }
+
+    public void actualizarImagen(Producto producto) {
+        productoRepository.save(producto);
+    }
+
    /* @Override
     public PaginaResponseDTO<ProductoResponseDTO> filtrar(
             String nombre,

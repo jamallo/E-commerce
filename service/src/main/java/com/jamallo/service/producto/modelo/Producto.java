@@ -36,7 +36,7 @@ public class Producto {
 
     @Setter
     @Getter
-    @Column(length = 500)
+    @Column(name = "imagen_url")
     private String imagenUrl;
 
 

@@ -31,6 +31,11 @@ public interface ProductoService {
             BigDecimal precioMin,
             BigDecimal precioMax);
 
+    Producto obtenerEntidadPorId (Long id);
+
+    void actualizarImagen (Producto producto);
+
+}
     /*PaginaResponseDTO<ProductoResponseDTO> filtrar (
             String nombre,
             Boolean activo,
@@ -40,4 +45,3 @@ public interface ProductoService {
             int size,
             String sortBy
     );*/
-}
