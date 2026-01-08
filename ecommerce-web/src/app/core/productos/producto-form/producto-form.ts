@@ -3,6 +3,7 @@ import { ProductoService } from '../../service/producto.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { CommonModule } from '@angular/common';
+import { Producto } from '../producto.model';
 
 @Component({
   selector: 'app-producto-form',
@@ -68,12 +69,17 @@ export class ProductoForm implements OnInit{
 
     const producto = this.form.value;
 
-    const peticion = this.modoEdicion && this.idProducto
+    const peticion$ = this.modoEdicion && this.idProducto
     ? this.productoService.actualizar(this.idProducto, producto)
     : this.productoService.crear(producto);
 
-    peticion.subscribe({
-      next: () => {
+    peticion$.subscribe({
+      next: (productoGuardado: Producto) => {
+        if (this.imagenSeleccionada && productoGuardado.id) {
+          this.productoService
+          .subirImagen(productoGuardado.id, this.imagenSeleccionada)
+          .subscribe();
+        }
         this.cargando = false;
         this.mensaje = this.modoEdicion
         ? 'Producto actualizado correctamente'
@@ -89,5 +95,14 @@ export class ProductoForm implements OnInit{
         console.error(err);
       }
     });
+  }
+
+  imagenSeleccionada?: File;
+
+  onImagenSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.imagenSeleccionada = input.files[0];
+    }
   }
 }

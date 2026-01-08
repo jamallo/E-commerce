@@ -15,15 +15,15 @@ export class ProductoService {
 
   constructor(private http: HttpClient) {}
 
-  crear(producto: any) {
-    return this.http.post(`${this.API_URL}`, producto);
+  crear(producto: Partial<Producto>): Observable<Producto> {
+    return this.http.post<Producto>(`${this.API_URL}`, producto);
   }
 
   obtenerPorId(id: number) : Observable<Producto> {
     return this.http.get<Producto>(`${this.API_URL}/${id}`);
   }
 
-  actualizar(id: number, producto: Producto): Observable<Producto> {
+  actualizar(id: number, producto: Partial<Producto>): Observable<Producto> {
     return this.http.put<Producto>(`${this.API_URL}/${id}`, producto);
   }
 
@@ -65,5 +65,12 @@ export class ProductoService {
       this.API_URL, { params }
     );
 
+  }
+
+  subirImagen(id: number, archivo: File) {
+    const formData = new FormData();
+    formData.append('imagen', archivo);
+
+    return this.http.post(`${this.API_URL}/{id}/imagen`, formData);
   }
 }

@@ -1,14 +1,14 @@
 <div class="tarjeta" [class.skeleton] = "skeleton">
 
   <div class="imagen">
-    @if (!skeleton) {
+    @if (!skeleton && producto) {
       <img #imagenProducto [src]="producto.imagenUrl || 'http://picsum.photos/400/400'" alt="Producto"/>
     }
 
   </div>
 
   <div class="contenido">
-    @if (!skeleton) {
+    @if (!skeleton && producto) {
     <h3>{{ producto.nombre }}</h3>
 
     @if (producto.descripcion) {

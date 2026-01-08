@@ -28,9 +28,14 @@
     <input type="checkbox" formControlName="activo"/>
   </label>
 
-  <label>
+  <!-- <label>
     URL de la imagen:
     <input type="text" formControlName="imagenUrl"/>
+  </label> -->
+
+  <label>
+    Imagen del Producto
+    <input type="file" (change)="onImagenSeleccionada($event)" />
   </label>
 
   <br><br>
