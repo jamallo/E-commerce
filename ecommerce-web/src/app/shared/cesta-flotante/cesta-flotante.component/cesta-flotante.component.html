@@ -1,10 +1,15 @@
 <a
-  routerLink="/cesta"
+  id="cesta-flotante"
   class="cesta-flotante"
-  [class.animar] = "animar">
+  [class.animar] = "animar"
+  (click)="toggleMiniCesta()">
   🛒
 
   @if (totalItems > 0) {
     <span class="badge">{{ totalItems }}</span>
   }
 </a>
+
+@if (mostrarMiniCesta) {
+  <app-mini-cesta (cerrar)="mostrarMiniCesta = false" />
+}

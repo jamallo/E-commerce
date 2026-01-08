@@ -11,7 +11,10 @@ export class BasketService {
   private itemsSubject = new BehaviorSubject<BasketItem[]>([]);
   items$ = this.itemsSubject.asObservable();
 
-  productoAniadido$ = new Subject<void>();
+  //productoAniadido$ = new Subject<void>();
+
+  private productoAniadidoSubject = new Subject<void>();
+  productoAniadido$ = this.productoAniadidoSubject.asObservable();
 
   constructor() {
     const stored = localStorage.getItem('basket');
@@ -32,7 +35,7 @@ export class BasketService {
 
     this.update(items);
 
-    this.productoAniadido$.next();
+    this.productoAniadidoSubject.next();
   }
 
   decrease(productId: number): void {

@@ -2,7 +2,7 @@
 
   <div class="imagen">
     @if (!skeleton) {
-      <img [src]="producto.imagenUrl || 'http://picsum.photos/400/400'" alt="Producto"/>
+      <img #imagenProducto [src]="producto.imagenUrl || 'http://picsum.photos/400/400'" alt="Producto"/>
     }
 
   </div>
@@ -15,9 +15,9 @@
       <p class="descripcion">{{ producto.descripcion }}</p>
     }
 
-    <div class="precio">{{producto.precio }}€</div>
+    <!--<div class="precio">{{producto.precio }}€</div>-->
 
-    <button class="btn-comprar" [class.animar] = "animando" (click)="aniadirACesta()">{{ textoBoton }}</button>
+    <button class="btn-comprar" [class.animar] = "animando" (click)="aniadirACesta()">Añadir · {{ producto.precio }}€</button>
     }
   </div>
 </div>

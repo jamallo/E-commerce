@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BasketService } from '../../basket/basket';
+import { MiniCestaComponent } from '../../mini-cesta/mini-cesta.component/mini-cesta.component';
 
 @Component({
   selector: 'app-cesta-flotante',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MiniCestaComponent],
   templateUrl: './cesta-flotante.component.html',
   styleUrl: './cesta-flotante.component.css',
 })
@@ -14,6 +15,7 @@ export class CestaFlotanteComponent implements OnInit {
 
   totalItems = 0;
   animar = false;
+  mostrarMiniCesta = false;
 
   constructor(private bascketService: BasketService) {}
 
@@ -29,6 +31,10 @@ export class CestaFlotanteComponent implements OnInit {
       this.animar = true;
       setTimeout(() => this.animar = false, 400);
     });
+  }
+
+  toggleMiniCesta(): void {
+    this.mostrarMiniCesta = !this.mostrarMiniCesta;
   }
 
 }

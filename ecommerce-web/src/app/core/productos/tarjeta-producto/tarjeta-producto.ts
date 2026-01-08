@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Producto } from '../producto.model';
 import { BasketService } from '../../../shared/basket/basket';
 import { NotificationService } from '../../notification/service';
+import { AnimacionesService } from '../../../shared/ui/animaciones.service';
 
 @Component({
   selector: 'app-tarjeta-producto',
@@ -21,14 +22,24 @@ export class TarjetaProductoComponent {
   animando = false;
   textoBoton = 'Añadir a la cesta';
 
+  @ViewChild('imagenProducto', {read: ElementRef})
+  imagenProducto!: ElementRef<HTMLImageElement>;
+
   constructor(
     private basketService: BasketService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private animacionesService: AnimacionesService
   ) {}
 
   aniadirACesta(): void {
     this.basketService.add(this.producto);
     this.notificationService.success('Producto añadido a la cesta');
+
+    const cesta = document.getElementById('cesta-flotante');
+
+    if (this.imagenProducto && cesta) {
+      this.animacionesService.volarACesta(this.imagenProducto.nativeElement, cesta);
+    }
 
     this.animando = true;
     this.textoBoton = 'Añadido ✓'
