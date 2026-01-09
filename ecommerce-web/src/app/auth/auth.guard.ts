@@ -14,7 +14,10 @@ export const authGuard: CanActivateFn = () => {
     }
 
     // Si no está autenticado -> Login
-    router.navigate(['/login']);
+    router.navigate(['/login'], {
+      queryParams: {redirect: '/checkout'}
+    });
+    
     return false;
 
 };

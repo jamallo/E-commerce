@@ -4,6 +4,7 @@ import { BasketItem } from '../basket/basket.model';
 
 export interface DireccionEnvio {
   nombre: string;
+  apellidos: string;
   direccion: string;
   ciudad: string;
   codigoPostal: string;
@@ -13,11 +14,11 @@ export interface Pedido {
   items: BasketItem[];
   direccion: DireccionEnvio;
   total: number;
-  fecha: Date;
+  fecha?: Date;
 
 }
 
-@Injectable({
+/* @Injectable({
   providedIn: 'root',
 })
 export class PedidoService {
@@ -25,4 +26,4 @@ export class PedidoService {
   //TODO
   console.log('Pedido creado: ' + pedido)
     }
-}
+} */

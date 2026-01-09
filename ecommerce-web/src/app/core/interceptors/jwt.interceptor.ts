@@ -9,14 +9,15 @@ export const JwtInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authService = inject(AuthService);
   const router = inject(Router);
+  const token = authService.getToken();
 
-  if (authService.isTokenExpired()) {
+
+  if (token && authService.isTokenExpired()) {
     authService.logout();
     router.navigate(['/login']);
     return throwError(() => new Error('Token expirado'));
   }
 
-  const token = authService.getToken();
 
   if (token) {
     req = req.clone({

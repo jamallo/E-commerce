@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+//import { RouterLink } from '@angular/router';
 import { BasketService } from '../../basket/basket';
 import { MiniCestaComponent } from '../../mini-cesta/mini-cesta.component/mini-cesta.component';
 
 @Component({
   selector: 'app-cesta-flotante',
   standalone: true,
-  imports: [CommonModule, RouterLink, MiniCestaComponent],
+  imports: [CommonModule, MiniCestaComponent], //RouterLink,
   templateUrl: './cesta-flotante.component.html',
   styleUrl: './cesta-flotante.component.css',
 })

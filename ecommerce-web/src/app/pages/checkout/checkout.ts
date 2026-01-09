@@ -2,23 +2,34 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BasketItem } from '../../shared/basket/basket.model';
 import { BasketService } from '../../shared/basket/basket';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
-import { PedidoService } from '../../shared/pedido/pedido.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PedidoService } from '../../shared/pedido/pedido.service';
 import { Router } from '@angular/router';
+
+type CheckoutStep = 'direccion' | 'confirmacion';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
-export class CheckoutComponet implements OnInit {
+
+
+export class CheckoutComponent implements OnInit {
+
+  step: CheckoutStep = 'direccion';
+
 
   items: BasketItem[] = [];
   total = 0;
 
   formularioEnvio!: FormGroup;
+  cargando = false;
+  error ='';
+
+  direccionConfirmada: any;
 
   constructor(
     private backetService: BasketService,
@@ -44,31 +55,64 @@ export class CheckoutComponet implements OnInit {
   }
 
 
+
+
   continuar(): void {
     if (this.formularioEnvio.invalid) {
       this.formularioEnvio.markAllAsTouched();
       return;
     }
-
-    const datosEnvio = this.formularioEnvio.value;
-
-    console.log('Datos de envío: ', datosEnvio);
-
-    //TODO: guardar dirección, crear pedido, ir al pago
+    this.direccionConfirmada = this.formularioEnvio.value;
+    this.step = 'confirmacion';
   }
 
   confirmarCompra(): void {
-    const pedido = {
-      items: this.backetService['itemsSubject'].value,
-      direccion: this.formularioEnvio.value,
-      total: this.backetService.getTotal(),
-      fecha: new Date()
-    };
+    this.cargando = true;
+    this.error = '';
 
-    this.pedidoService.crearPedido(pedido);
-    this.backetService.clear();
-
-    this.router.navigate(['/checkout/exito']);
+    this.pedidoService.checkout({
+      direccion: this.direccionConfirmada
+    }).subscribe({
+      next: () => {
+        this.backetService.clear();
+        this.router.navigate(['/checkout/exito']);
+      },
+      error: () => {
+        this.error = 'Error al procesar el pedido';
+        this.cargando = false;
+      }
+    });
   }
-
 }
+
+/* confirmarCompra(): void {
+  if (this.formularioEnvio.invalid) {
+    this.formularioEnvio.markAllAsTouched();
+    return;
+  }
+  this.cargando = true;
+
+  const direccionEnvio = this.formularioEnvio.value;
+
+  this.pedidoService.checkout({
+    direccion: direccionEnvio
+  }).subscribe({
+    next: () => {
+      this.backetService.clear();
+      this.router.navigate(['/checkout/exito']);
+    },
+    error: () => {
+      this.error = 'Error al procesar pedido';
+      this.cargando = false;
+    }
+  });
+  } */
+
+
+  /* const datosEnvio = this.formularioEnvio.value;
+
+  console.log('Datos de envío: ', datosEnvio);
+
+  //TODO: guardar dirección, crear pedido, ir al pago
+} */
+

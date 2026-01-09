@@ -4,6 +4,8 @@ import { Producto } from '../producto.model';
 import { BasketService } from '../../../shared/basket/basket';
 import { NotificationService } from '../../notification/service';
 import { AnimacionesService } from '../../../shared/ui/animaciones.service';
+import { AuthService } from '../../../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-producto',
@@ -28,10 +30,18 @@ export class TarjetaProductoComponent {
   constructor(
     private basketService: BasketService,
     private notificationService: NotificationService,
-    private animacionesService: AnimacionesService
+    private animacionesService: AnimacionesService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   aniadirACesta(): void {
+    if (!this.authService.isLogged()) {
+      this.router.navigate(['/login'], {
+        queryParams: { redirect: this.router.url}
+      });
+      return;
+    }
     this.basketService.add(this.producto);
     this.notificationService.success('Producto añadido a la cesta');
 
