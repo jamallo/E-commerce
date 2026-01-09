@@ -4,6 +4,7 @@ import { BasketItem } from '../../shared/basket/basket.model';
 import { BasketService } from '../../shared/basket/basket';
 import { ConfirmacionService } from '../../shared/confirmacion/confirmacion.service';
 import { Router, RouterLink } from "@angular/router";
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-cesta',
@@ -20,7 +21,8 @@ export class CestaComponent implements OnInit {
   constructor(
     private basketService: BasketService,
     private confirmacionService: ConfirmacionService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +59,13 @@ export class CestaComponent implements OnInit {
   }
 
   finalizarCompra(): void {
+    if (!this.authService.isLogged()) {
+      this.router.navigate(['/login'], {
+        queryParams: {redirect: '/checkout'}
+      });
+      return;
+    }
+
     this.router.navigate(['/checkout']);
   }
 }

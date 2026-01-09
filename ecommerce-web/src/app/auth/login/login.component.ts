@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,21 +19,19 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router) {}
+    private router: Router,
+    private route: ActivatedRoute) {}
 
   login(): void {
     this.authService.login(this.email, this.contrasenia)
     .subscribe({
       next: () => {
-        this.error = '';
-        this.router.navigate(['/prueba']);
+        const redirect = this.route.snapshot.queryParamMap.get('redirect');
+        this.router.navigateByUrl(redirect ?? '/productos');
       },
       error: () => {
         this.error = 'Credenciales incorrectas';
       }
     });
-
   }
-
-
 }

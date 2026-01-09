@@ -19,7 +19,7 @@ export class BasketService {
   constructor() {
     const stored = localStorage.getItem('basket');
     if (stored) {
-      this.itemsSubject.next(JSON.parse(stored));
+      this.itemsSubject.next(JSON.parse(stored) as BasketItem[]);
     }
   }
 
@@ -73,5 +73,5 @@ export class BasketService {
     this.itemsSubject.next(items);
     localStorage.setItem('basket', JSON.stringify(items));
   }
-
 }
+
