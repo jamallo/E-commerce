@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+//import { Injectable } from '@angular/core';
 import { BasketItem } from '../basket/basket.model';
 
 
@@ -10,12 +10,12 @@ export interface DireccionEnvio {
   codigoPostal: string;
   telefono: string;
 }
+
 export interface Pedido {
   items: BasketItem[];
   direccion: DireccionEnvio;
   total: number;
   fecha?: Date;
-
 }
 
 /* @Injectable({

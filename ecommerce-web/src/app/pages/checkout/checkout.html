@@ -1,7 +1,8 @@
 <h1>Finalizar compra</h1>
 
 <!-- ESTADO 1: DIRECCIÓN -->
-<div *ngIf="step === 'direccion'">
+ @if (step === 'direccion') {
+<div>
 
   <h2>Dirección de envío</h2>
 
@@ -15,20 +16,22 @@
     <input formControlName="telefono" placeholder="Teléfono">
 
   </form>
-
   <h3>Resumen</h3>
-  <div *ngFor="let item of items">
+  @for (item of items; track item.product.id) {
+  <div>
     {{ item.product.nombre }} x {{ item.quantity }}
   </div>
-
+  }
   <p><strong>Total:</strong> {{ total | currency:'EUR' }}</p>
 
   <button (click)="continuar()">Continuar</button>
 
 </div>
+ }
 
 <!-- ESTADO 2: CONFIRMACIÓN -->
-<div *ngIf="step === 'confirmacion'">
+ @if (step === 'confirmacion') {
+<div>
 
   <h2>Confirmar pedido</h2>
 
@@ -41,17 +44,20 @@
   </p>
 
   <h3>Productos</h3>
-  <div *ngFor="let item of items">
+  @for (item of items; track item.product.id) {
+  <div>
     {{ item.product.nombre }} x {{ item.quantity }}
   </div>
-
+  }
   <p><strong>Total:</strong> {{ total | currency:'EUR' }}</p>
 
   <button (click)="step = 'direccion'">Volver</button>
-  <button (click)="confirmarCompra()" [disabled]="cargando">
+  <hr>
+  <button (click)="confirmarCompra()" [disabled]="cargando" class="btn-principal">
     {{ cargando ? 'Procesando...' : 'Confirmar compra' }}
   </button>
-
-  <p class="error" *ngIf="error">{{ error }}</p>
-
+  @if (error) {
+  <p class="error-box">{{ error }}</p>
+  }
 </div>
+}

@@ -1,18 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { DireccionEnvio } from './pedido.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PedidoService {
 
-  private apiUrl = '/api/pedidos';
+  private apiUrl = 'http://localhost:8081/api/pedidos';
 
   constructor(private http: HttpClient) {}
 
-  checkout(data: {direccion: any}): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/checkout`, data);
+  checkout(dto: DireccionEnvio) {
+    return this.http.post(`${this.apiUrl}/checkout`, dto);
   }
 
 }

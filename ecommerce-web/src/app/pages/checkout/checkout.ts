@@ -5,6 +5,7 @@ import { BasketService } from '../../shared/basket/basket';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PedidoService } from '../../shared/pedido/pedido.service';
 import { Router } from '@angular/router';
+import { SpinnerService } from '../../shared/spinner/spinner.service';
 
 type CheckoutStep = 'direccion' | 'confirmacion';
 
@@ -35,7 +36,8 @@ export class CheckoutComponent implements OnInit {
     private backetService: BasketService,
     private fb: FormBuilder,
     private pedidoService: PedidoService,
-    private router: Router
+    private router: Router,
+    private spinner: SpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -67,19 +69,44 @@ export class CheckoutComponent implements OnInit {
   }
 
   confirmarCompra(): void {
+    console.log('Iniciando confirmaCompra en checkout.ts');
+    console.log('Token en localStorage:', localStorage.getItem('token'));
+    /* if (this.formularioEnvio.invalid) {
+      this.formularioEnvio.markAllAsTouched();
+      return;
+    } */
+
     this.cargando = true;
     this.error = '';
+    this.spinner.show();
 
-    this.pedidoService.checkout({
-      direccion: this.direccionConfirmada
-    }).subscribe({
-      next: () => {
-        this.backetService.clear();
-        this.router.navigate(['/checkout/exito']);
+    const datosEnvio = this.formularioEnvio.value;
+
+    this.backetService.syncWithBackend().subscribe({
+      next: (response) => {
+        console.log('Sync exitoso: ', response);
+        this.pedidoService.checkout(datosEnvio).subscribe({
+          next: (pedidoResponse) => {
+            console.log('Checkout exitoso: ', pedidoResponse);
+            this.backetService.clear();
+            this.spinner.hide();
+
+            setTimeout(() => {
+              this.router.navigate(['/checkout/exito']);
+            }, 300);
+          },
+          error: (error) => {
+            console.error('Error en checkout: ', error);
+            this.error = 'Error al procesar el pedido';
+            this.cargando = false;
+            this.spinner.hide();
+          }
+        });
       },
-      error: () => {
-        this.error = 'Error al procesar el pedido';
-        this.cargando = false;
+      error: (errors) => {
+        console.error('Error en sync: ', errors);
+        this.error = 'Error sincronizando la cesta';
+        this.spinner.hide();
       }
     });
   }

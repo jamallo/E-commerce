@@ -24,3 +24,11 @@ button {
   color: red;
   font-size: 12px;
 }
+
+.error-box {
+  margin-top: 12px;
+  padding: 10px;
+  background: #ffe0e0;
+  color: #a00000;
+  border-radius: 6px;
+}

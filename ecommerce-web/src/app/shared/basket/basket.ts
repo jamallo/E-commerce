@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { BasketItem } from './basket.model';
 import { Producto } from '../../core/productos/producto.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class BasketService {
   private productoAniadidoSubject = new Subject<void>();
   productoAniadido$ = this.productoAniadidoSubject.asObservable();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     const stored = localStorage.getItem('basket');
     if (stored) {
       this.itemsSubject.next(JSON.parse(stored) as BasketItem[]);
@@ -72,6 +73,15 @@ export class BasketService {
   private update(items: BasketItem[]): void {
     this.itemsSubject.next(items);
     localStorage.setItem('basket', JSON.stringify(items));
+  }
+
+  syncWithBackend() {
+    const items = this.itemsSubject.value.map(i => ({
+      productoId: i.product.id,
+      cantidad: i.quantity
+    }));
+
+    return this.http.post('http://localhost:8081/api/cesta', items);
   }
 }
 
