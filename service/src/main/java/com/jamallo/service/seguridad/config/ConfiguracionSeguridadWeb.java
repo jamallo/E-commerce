@@ -60,6 +60,7 @@ public class ConfiguracionSeguridadWeb {
                         .requestMatchers("/api/cesta/**").authenticated()
                         //PEDIDOS
                         .requestMatchers("/api/pedidos/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/pedidos/mis-pedidos").authenticated()
                         //ADMINISTRADOR
                         .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")

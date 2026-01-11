@@ -4,14 +4,13 @@ import com.jamallo.service.cesta.modelo.Cesta;
 import com.jamallo.service.cesta.modelo.CestaItem;
 import com.jamallo.service.cesta.repositorio.CestaRepository;
 import com.jamallo.service.entidad.Usuario;
-import com.jamallo.service.pedido.dto.CheckoutRequestDTO;
-import com.jamallo.service.pedido.dto.PedidoRepository;
-import com.jamallo.service.pedido.dto.PedidoResponseDTO;
+import com.jamallo.service.pedido.dto.*;
 import com.jamallo.service.pedido.modelo.EstadoPedido;
 import com.jamallo.service.pedido.modelo.Pedido;
 import com.jamallo.service.pedido.modelo.PedidoItem;
 import com.jamallo.service.repositorio.RepositorioUsuario;
-import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
@@ -84,5 +85,47 @@ public class PedidoService {
         response.setEstado(pedido.getEstado().name());
 
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoHistoriaDTO> obtenerPedidoUsuario(String email) {
+        return pedidoRepository
+                .findByUsuarioEmailOrderByFechaCreacionDesc(email)
+                .stream()
+                .map(pedido -> {
+                    PedidoHistoriaDTO dto = new PedidoHistoriaDTO();
+                    dto.setId(pedido.getId());
+                    dto.setFecha(pedido.getFechaCreacion());
+                    dto.setTotal(pedido.getTotal());
+                    dto.setEstado(pedido.getEstado().name());
+                    return dto;
+                }).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public PedidoDetalleDTO obtenerDetallePedido(Long pedidoId, String email) {
+        Pedido pedido = pedidoRepository
+                .findByIdAndUsuarioEmail(pedidoId, email)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido no encontrado"));
+
+        PedidoDetalleDTO dto = new PedidoDetalleDTO();
+        dto.setId(pedido.getId());
+        dto.setFecha(pedido.getFechaCreacion());
+        dto.setEstado(pedido.getEstado().name());
+        dto.setTotal(pedido.getTotal());
+
+        List<PedidoItemDTO> items = pedido.getItems().stream().map(item -> {
+            PedidoItemDTO itemDTO = new PedidoItemDTO();
+            itemDTO.setNombreProducto(item.getProducto().getNombre());
+            itemDTO.setCantidad(item.getCantidad());
+            itemDTO.setPrecioUnitario(item.getPrecioUnitario());
+            itemDTO.setSubtotal(item.getPrecioUnitario()
+                    .multiply(BigDecimal.valueOf(item.getCantidad())));
+            return itemDTO;
+        }).toList();
+
+        dto.setItem(items);
+        return dto;
     }
 }
