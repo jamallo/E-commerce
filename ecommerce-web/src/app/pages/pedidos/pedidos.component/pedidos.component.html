@@ -1,0 +1,32 @@
+<h1> Mis pedidos </h1>
+
+@if (cargando) {
+  <p>Cargando pedidos...</p>
+}
+
+@if (!cargando && pedidos.length === 0) {
+  <p>No has realizado ningún pedido todavía</p>
+}
+
+@if (pedidos.length > 0) {
+  <table>
+    <tr>
+      <td>ID</td>
+      <td>Fecha</td>
+      <td>Total</td>
+      <td>Estado</td>
+    </tr>
+
+    @for (pedido of pedidos; track pedido.id) {
+      <tr>
+        <td>#{{ pedido.id }}</td>
+        <td>{{ pedido.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ pedido.total | currency:'EUR' }}</td>
+        <td>{{ pedido.estado }}</td>
+      </tr>
+      <button [routerLink]="['/pedidos', pedido.id]">
+        Ver detalles
+      </button>
+    }
+  </table>
+}

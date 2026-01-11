@@ -18,6 +18,28 @@ export interface Pedido {
   fecha?: Date;
 }
 
+export interface PedidoHistoriaDTO {
+  id: number;
+  fecha: string;
+  total: number;
+  estado: string;
+}
+
+export interface PedidoItem {
+  nombreProducto: string;
+  cantidad: number;
+  precioUnitario: number;
+  subtotal: number;
+}
+
+export interface PedidoDetalle {
+  id: number;
+  fecha: string;
+  estado: string;
+  total: number;
+  items: PedidoItem[];
+}
+
 /* @Injectable({
   providedIn: 'root',
 })

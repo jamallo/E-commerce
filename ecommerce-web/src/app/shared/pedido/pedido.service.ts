@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DireccionEnvio } from './pedido.model';
+import { DireccionEnvio, PedidoDetalle, PedidoHistoriaDTO } from './pedido.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,16 @@ export class PedidoService {
 
   checkout(dto: DireccionEnvio) {
     return this.http.post(`${this.apiUrl}/checkout`, dto);
+  }
+
+  getMisPedidos() {
+    return this.http.get<PedidoHistoriaDTO[]>(
+      'http://localhost:8081/api/pedidos/mis-pedidos'
+    );
+  }
+
+  obtenerDetalle(id: number) {
+    return this.http.get<PedidoDetalle>(`${this.apiUrl}/${id}`);
   }
 
 }
