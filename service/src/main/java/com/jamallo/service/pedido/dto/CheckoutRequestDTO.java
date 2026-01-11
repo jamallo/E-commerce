@@ -3,6 +3,8 @@ package com.jamallo.service.pedido.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
 public class CheckoutRequestDTO {
 
@@ -12,4 +14,6 @@ public class CheckoutRequestDTO {
     private String ciudad;
     private String codigoPostal;
     private String  telefono;
+
+    private List<ItemCheckoutDTO> items;
 }

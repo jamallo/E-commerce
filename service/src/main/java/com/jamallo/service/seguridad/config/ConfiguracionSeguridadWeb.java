@@ -37,7 +37,8 @@ public class ConfiguracionSeguridadWeb {
     }
 
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http, FiltroJwtAutenticacion filtroJwtAutenticacion) throws Exception {
+    public SecurityFilterChain filterChain (HttpSecurity http, FiltroJwtAutenticacion filtroJwtAutenticacion)
+            throws Exception {
 
         http
                 .cors(Customizer.withDefaults())
@@ -55,11 +56,14 @@ public class ConfiguracionSeguridadWeb {
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        //CESTA
+                        .requestMatchers("/api/cesta/**").authenticated()
+                        //PEDIDOS
+                        .requestMatchers("/api/pedidos/**").authenticated()
                         //ADMINISTRADOR
                         .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/pedidos/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )

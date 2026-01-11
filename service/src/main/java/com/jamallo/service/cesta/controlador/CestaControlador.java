@@ -7,6 +7,7 @@ import com.jamallo.service.cesta.modelo.Cesta;
 import com.jamallo.service.cesta.servicio.CestaService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,13 +20,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cesta")
 @RequiredArgsConstructor
-@PreAuthorize("isAuthenticated()")
+//@PreAuthorize("isAuthenticated()")
 public class CestaControlador {
 
     private final CestaService cestaService;
 
     @GetMapping
-    public ResponseEntity<CestaResponseDTO> obtenerCesta(Authentication authentication) {
+    public ResponseEntity<CestaResponseDTO> obtenerCesta(
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String email = authentication.getName();
         return ResponseEntity.ok(
                 cestaService.obtenerOCrearPorEmail(email)
@@ -33,15 +38,24 @@ public class CestaControlador {
     }
 
     @PostMapping
-    public void guardarCesta(
-            @AuthenticationPrincipal Authentication authentication,
+    public ResponseEntity<Void> guardarCesta(
+            Authentication authentication,
             @RequestBody List<CestaItemDTO> items
             ) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         cestaService.actualizar(authentication.getName(), items);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public void vaciarCesta(@AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<Void> vaciarCesta(
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         cestaService.vaciar(authentication.getName());
+        return ResponseEntity.ok().build();
     }
 }

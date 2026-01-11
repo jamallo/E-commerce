@@ -14,9 +14,12 @@ import com.jamallo.service.repositorio.RepositorioUsuario;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -31,16 +34,17 @@ public class PedidoService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Cesta cesta = cestaRepository.findByUsuario(usuario)
-                .orElseThrow(() -> new RuntimeException("La cesta está vacía"));
+                .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "La cesta está vacía"));
 
         if (cesta.getItems().isEmpty()) {
-            throw  new RuntimeException("La cesta está vacía");
+            throw new ResponseStatusException(BAD_REQUEST, "La cesta está vacía");
         }
 
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
         pedido.setEstado(EstadoPedido.PENDIENTE);
         pedido.setFechaCreacion(LocalDateTime.now());
+        pedido.setItems(new ArrayList<>());
 
         pedido.setNombre(dto.getNombre());
         pedido.setApellidos(dto.getApellidos());
