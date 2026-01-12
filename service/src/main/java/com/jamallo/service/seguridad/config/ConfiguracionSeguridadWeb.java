@@ -61,6 +61,14 @@ public class ConfiguracionSeguridadWeb {
                         //PEDIDOS
                         .requestMatchers("/api/pedidos/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/pedidos/mis-pedidos").authenticated()
+                        //DIRECCIÓN
+                        .requestMatchers("/api/perfil/direcciones").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/perfil/direcciones").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/perfil/direcciones").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/perfil/direcciones").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/perfil/direcciones").authenticated()
+                        .requestMatchers("/api/direcciones/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/direcciones").authenticated()
                         //ADMINISTRADOR
                         .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")

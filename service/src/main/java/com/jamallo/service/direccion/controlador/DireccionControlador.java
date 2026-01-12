@@ -24,4 +24,19 @@ public class DireccionControlador {
     public Direccion guardar(@RequestBody Direccion direccion, Authentication authentication) {
         return direccionService.guardarDireccion(authentication.getName(), direccion);
     }
+
+    @PutMapping("/{id}")
+    public Direccion actualizar (@PathVariable Long id, @RequestBody Direccion direccion, Authentication authentication) {
+        return direccionService.actualizar(id, direccion, authentication.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id, Authentication authentication) {
+        direccionService.eliminar(id, authentication.getName());
+    }
+
+    @PostMapping("/{id}/principal")
+    public void marcarPrincipal(@PathVariable Long id, Authentication authentication) {
+        direccionService.marcarPrincipal(id, authentication.getName());
+    }
 }

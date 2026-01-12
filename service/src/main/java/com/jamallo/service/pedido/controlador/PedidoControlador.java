@@ -1,9 +1,6 @@
 package com.jamallo.service.pedido.controlador;
 
-import com.jamallo.service.pedido.dto.CheckoutRequestDTO;
-import com.jamallo.service.pedido.dto.PedidoDetalleDTO;
-import com.jamallo.service.pedido.dto.PedidoHistoriaDTO;
-import com.jamallo.service.pedido.dto.PedidoResponseDTO;
+import com.jamallo.service.pedido.dto.*;
 import com.jamallo.service.pedido.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,5 +46,13 @@ public class PedidoControlador {
         return ResponseEntity.ok(
                 pedidoService.obtenerDetallePedido(id, authentication.getName())
         );
+    }
+
+    @PostMapping("/{id}/repetir")
+    public List<PedidoRepetirItemDTO> repetirPedido(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        return pedidoService.repetirPedido(id, authentication.getName());
     }
 }

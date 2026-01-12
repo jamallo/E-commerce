@@ -129,4 +129,21 @@ public class PedidoService {
         dto.setItems(items);
         return dto;
     }
+
+    @Transactional(readOnly = true)
+    public List<PedidoRepetirItemDTO> repetirPedido(Long pedidoId, String email) {
+
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (!pedido.getUsuario().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        return pedido.getItems().stream()
+                .map(item -> new PedidoRepetirItemDTO(
+                        item.getProducto().getId(),
+                        item.getCantidad()
+                )).toList();
+    }
 }
