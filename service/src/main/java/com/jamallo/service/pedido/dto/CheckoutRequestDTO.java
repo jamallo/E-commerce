@@ -13,7 +13,8 @@ public class CheckoutRequestDTO {
     private String direccion;
     private String ciudad;
     private String codigoPostal;
-    private String  telefono;
+    private String provincia;
+    private String telefono;
 
     private List<ItemCheckoutDTO> items;
 }

@@ -52,6 +52,7 @@ public class PedidoService {
         pedido.setDireccion(dto.getDireccion());
         pedido.setCiudad(dto.getCiudad());
         pedido.setCodigoPostal(dto.getCodigoPostal());
+        pedido.setProvincia(dto.getProvincia());
         pedido.setTelefono(dto.getTelefono());
 
         BigDecimal total = BigDecimal.ZERO;
@@ -125,7 +126,7 @@ public class PedidoService {
             return itemDTO;
         }).toList();
 
-        dto.setItem(items);
+        dto.setItems(items);
         return dto;
     }
 }

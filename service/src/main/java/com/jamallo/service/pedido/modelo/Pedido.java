@@ -35,6 +35,7 @@ public class Pedido {
     private String direccion;
     private String ciudad;
     private String codigoPostal;
+    private String provincia;
     private String telefono;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)

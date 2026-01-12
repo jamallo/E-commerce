@@ -13,5 +13,5 @@ public class PedidoDetalleDTO {
     private LocalDateTime fecha;
     private String estado;
     private BigDecimal total;
-    private List<PedidoItemDTO> item;
+    private List<PedidoItemDTO> items;
 }
