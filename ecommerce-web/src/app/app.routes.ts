@@ -82,5 +82,5 @@ export const routes: Routes = [
   { path: '**',
     redirectTo: 'productos'}
 
+  ];
   //{ path: 'productos/nuevo', component: ProductoForm, canActivate: [authGuard], data: { role: 'ADMIN' }},
-];

@@ -6,6 +6,17 @@
 
   <h2>Dirección de envío</h2>
 
+  <h3> Dirección guardada </h3>
+
+  <select #selectDireccion (change)="usarDireccion(selectDireccion.value)">
+    <option value="">Nueva dirección</option>
+    @for (direccion of direcciones; track direccion.id) {
+      <option [value]="direccion.id">
+        {{ direccion.direccion }} - {{ direccion.ciudad }}
+      </option>
+    }
+  </select>
+
   <form [formGroup]="formularioEnvio">
 
     <input formControlName="nombre" placeholder="Nombre">
@@ -13,6 +24,7 @@
     <input formControlName="direccion" placeholder="Dirección">
     <input formControlName="ciudad" placeholder="Ciudad">
     <input formControlName="codigoPostal" placeholder="Código postal">
+    <input formControlName="provincia" placeholder="Provincia">
     <input formControlName="telefono" placeholder="Teléfono">
 
   </form>
@@ -39,7 +51,7 @@
   <p>
     {{ direccionConfirmada.nombre }} {{ direccionConfirmada.apellidos }}<br>
     {{ direccionConfirmada.direccion }}<br>
-    {{ direccionConfirmada.ciudad }} ({{ direccionConfirmada.codigoPostal }})<br>
+    {{ direccionConfirmada.ciudad }} {{ direccionConfirmada.codigoPostal }}, {{direccionConfirmada.provincia}}<br>
     Tel: {{ direccionConfirmada.telefono }}
   </p>
 

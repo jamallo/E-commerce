@@ -13,7 +13,7 @@ import { PedidoService } from '../../../shared/pedido/pedido.service';
 })
 export class PedidoDetalleComponent implements OnInit {
 
-  pedido!: PedidoDetalle;
+  pedido?: PedidoDetalle;
 
   constructor(
     private route: ActivatedRoute,

@@ -1,27 +1,31 @@
-<h1>Detalle del pedido #{{ pedido.id }}</h1>
+@if (pedido) {
+  <h1>Detalle del pedido #{{ pedido.id }}</h1>
 
-<p><strong>Fecha:</strong> {{ pedido.fecha | date:'short' }}</p>
-<p><strong>Estado:</strong> {{ pedido.estado }}</p>
+  <p><strong>Fecha:</strong> {{ pedido.fecha | date:'short' }}</p>
+  <p><strong>Estado:</strong> {{ pedido.estado }}</p>
 
-<table border="1" width="100%">
-  <thead>
-    <tr>
-      <th>Producto</th>
-      <th>Cantidad</th>
-      <th>Precio</th>
-      <th>Subtotal</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (item of pedido.items; track item.nombreProducto) {
+  <table border="1" width="100%">
+    <thead>
       <tr>
-        <td>{{ item.nombreProducto }}</td>
-        <td>{{ item.cantidad }}</td>
-        <td>{{ item.precioUnitario | currency:'EUR' }}</td>
-        <td>{{ item.subtotal | currency:'EUR' }}</td>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Subtotal</th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @for (item of pedido.items; track item.nombreProducto) {
+        <tr>
+          <td>{{ item.nombreProducto }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>{{ item.precioUnitario | currency:'EUR' }}</td>
+          <td>{{ item.subtotal | currency:'EUR' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 
-<h3>Total: {{ pedido.total | currency:'EUR' }}</h3>
+  <h3>Total: {{ pedido.total | currency:'EUR' }}</h3>
+} @else {
+  <p>Cargando detalle del pedido ...</p>
+}

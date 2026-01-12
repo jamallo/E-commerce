@@ -1,0 +1,10 @@
+<h2>Mis direcciones</h2>
+
+@for (direccion of direcciones; track direccion.id) {
+  <div class="direccion-card">
+    <p>{{ direccion.nombre }} {{ direccion.apellidos }}</p>
+    <p>{{ direccion.direccion }}</p>
+    <p>{{ direccion.ciudad }} {{ direccion.codigoPostal }}, {{ direccion.provincia }}</p>
+    <p>{{ direccion.telefono }}</p>
+  </div>
+}

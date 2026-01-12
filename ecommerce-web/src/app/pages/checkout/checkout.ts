@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PedidoService } from '../../shared/pedido/pedido.service';
 import { Router } from '@angular/router';
 import { SpinnerService } from '../../shared/spinner/spinner.service';
+import { Direccion } from '../../shared/direccion/direccion.model';
+import { DireccionService } from '../perfil/perfil-direcciones/direccion.service';
 
 type CheckoutStep = 'direccion' | 'confirmacion';
 
@@ -36,6 +38,7 @@ export class CheckoutComponent implements OnInit {
     private backetService: BasketService,
     private fb: FormBuilder,
     private pedidoService: PedidoService,
+    private direccionService: DireccionService,
     private router: Router,
     private spinner: SpinnerService
   ) {}
@@ -52,7 +55,12 @@ export class CheckoutComponent implements OnInit {
       direccion: ['', Validators.required],
       ciudad: ['', Validators.required],
       codigoPostal: ['', Validators.required],
+      provincia: ['', Validators.required],
       telefono: ['', Validators.required],
+    });
+
+    this.direccionService.obtener().subscribe(d => {
+      this.direcciones = d;
     });
   }
 
@@ -109,6 +117,15 @@ export class CheckoutComponent implements OnInit {
         this.spinner.hide();
       }
     });
+  }
+
+  direcciones: Direccion[] = [];
+
+  usarDireccion(id: string) {
+    const dir = this.direcciones.find(d => d.id === +id);
+    if(dir) {
+      this.formularioEnvio.patchValue(dir);
+    }
   }
 }
 

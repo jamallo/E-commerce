@@ -23,10 +23,12 @@
         <td>{{ pedido.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
         <td>{{ pedido.total | currency:'EUR' }}</td>
         <td>{{ pedido.estado }}</td>
+        <td>
+          <button [routerLink]="['/pedidos', pedido.id]">
+            Ver detalles
+          </button>
+        </td>
       </tr>
-      <button [routerLink]="['/pedidos', pedido.id]">
-        Ver detalles
-      </button>
     }
   </table>
 }
