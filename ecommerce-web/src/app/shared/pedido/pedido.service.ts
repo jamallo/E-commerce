@@ -1,7 +1,7 @@
 //import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DireccionEnvio, PedidoDetalle, PedidoHistoriaDTO } from './pedido.model';
+import { DireccionEnvio, PedidoDetalle, PedidoHistoriaDTO, PedidoRepetirItem } from './pedido.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +24,13 @@ export class PedidoService {
 
   obtenerDetalle(id: number) {
     return this.http.get<PedidoDetalle>(`${this.apiUrl}/${id}`);
+  }
+
+  repetirPedido(id: number) {
+    return this.http.post<PedidoRepetirItem[]>(
+      `${this.apiUrl}/${id}/repetir`,
+      {}
+    );
   }
 
 }

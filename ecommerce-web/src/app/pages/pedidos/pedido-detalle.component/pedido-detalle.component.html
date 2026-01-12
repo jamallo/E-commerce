@@ -26,6 +26,10 @@
   </table>
 
   <h3>Total: {{ pedido.total | currency:'EUR' }}</h3>
+  <hr>
+  <button (click)="repetirPedido(pedido.id)">
+    🔁 Repetir pedido
+  </button>
 } @else {
   <p>Cargando detalle del pedido ...</p>
 }

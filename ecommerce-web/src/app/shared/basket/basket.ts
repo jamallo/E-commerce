@@ -83,5 +83,19 @@ export class BasketService {
 
     return this.http.post('http://localhost:8081/api/cesta', items);
   }
+
+  cargarDesdePedido(items: {productoId: number; cantidad: number}[]) {
+    this.clear();
+
+    items.forEach(i => {
+      this.itemsSubject.next([
+        ...this.itemsSubject.value,
+        {
+          product: { id: i.productoId } as any,
+          quantity: i.cantidad
+        }
+      ]);
+    });
+  }
 }
 

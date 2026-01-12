@@ -8,4 +8,5 @@ ciudad: string;
 codigoPostal: string;
 provincia: string;
 telefono: string;
+principal: boolean;
 }

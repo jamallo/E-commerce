@@ -1,19 +1,25 @@
 <nav class="navbar">
 
-      @if (isLogged) {
-        <a routerLink="/productos">Productos</a>
+  @if (isLogged) {
 
+    <a routerLink="/productos">Productos</a>
 
-          <a *appHasRole="['ADMIN']" routerLink = "/productos/nuevo">Nuevo producto</a>
-          <a routerLink="/cesta" class="cesta">
-            🛒🧺 Cesta
-            @if (totalCesta > 0) {
-              <span class="bagne">{{ totalCesta }}</span>
-            }
-          </a>
+    <a routerLink="/perfil">Mi perfil</a>
 
-        <button (click)="logout()">Deslogarse</button>
-      } @else {
-        <a routerLink ="/login">Login</a>
+    <a *appHasRole="['ADMIN']" routerLink = "/productos/nuevo">Nuevo producto</a>
+
+    <a routerLink="/cesta" class="cesta">
+      🛒🧺 Cesta
+      @if (totalCesta > 0) {
+        <span class="bagne">{{ totalCesta }}</span>
       }
-    </nav>
+    </a>
+
+    <button (click)="logout()">Deslogarse</button>
+
+  } @else {
+
+    <a routerLink ="/login">Login</a>
+    
+  }
+</nav>

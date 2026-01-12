@@ -47,6 +47,16 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/pedidos/pedido-detalle.component/pedido-detalle.component').then(m => m.PedidoDetalleComponent),
         canActivate: [authGuard]},
+
+      {path: 'direcciones',
+        loadComponent: () =>
+          import('./pages/perfil/perfil-direcciones.component/perfil-direcciones.component').then(m => m.PerfilDireccionesComponent),
+        canActivate: [authGuard]},
+
+      { path: 'mis-datos',
+        loadComponent: () =>
+          import('./pages/perfil/perfil-datos.component/perfil-datos.component').then(m => m.PerfilDatosComponent),
+        canActivate: [authGuard]},
     ]
   },
 
@@ -58,6 +68,16 @@ export const routes: Routes = [
   { path: 'pedidos/:id',
     loadComponent: () =>
       import('./pages/pedidos/pedido-detalle.component/pedido-detalle.component').then(m => m.PedidoDetalleComponent),
+    canActivate: [authGuard]},
+
+  { path: 'direcciones',
+    loadComponent: () =>
+      import('./pages/perfil/perfil-direcciones.component/perfil-direcciones.component').then(m => m.PerfilDireccionesComponent),
+    canActivate: [authGuard]},
+
+  { path: 'mis-datos',
+    loadComponent: () =>
+      import('./pages/perfil/perfil-datos.component/perfil-datos.component').then(m => m.PerfilDatosComponent),
     canActivate: [authGuard]},
 
   { path: 'prueba',

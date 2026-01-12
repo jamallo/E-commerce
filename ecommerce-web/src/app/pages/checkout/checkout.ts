@@ -62,6 +62,8 @@ export class CheckoutComponent implements OnInit {
     this.direccionService.obtener().subscribe(d => {
       this.direcciones = d;
     });
+
+    this.direccionService.guardar(this.direccionConfirmada).subscribe();
   }
 
 

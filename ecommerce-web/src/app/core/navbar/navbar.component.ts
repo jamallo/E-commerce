@@ -49,15 +49,15 @@ export class NavbarComponent implements OnInit{
     this.router.navigate(['/prueba']);
   }
 
-  /* get esAdmin(): boolean {
-    return this.authService.isAdmin();
-  } */
 
   goAdmin(): void {
     this.router.navigate(['/admin']);
   }
 }
 
+/* get esAdmin(): boolean {
+  return this.authService.isAdmin();
+} */
 
 /* template: `
   <nav style="padding: 10px; background: #eee">

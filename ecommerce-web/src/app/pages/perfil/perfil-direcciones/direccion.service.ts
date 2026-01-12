@@ -19,4 +19,22 @@ export class DireccionService {
     return this.http.post<Direccion>(this.api, direccion);
   }
 
+  marcarPrincipal(id: number) {
+    return this.http.post(
+      `${this.api}/${id}/principal`,
+      {}
+    );
+  }
+
+  actualizar(id: number, direccion: Direccion) {
+    return this.http.put<Direccion>(
+      `${this.api}/${id}`,
+      direccion
+    );
+  }
+
+  eliminar(id: number) {
+    return this.http.delete(`${this.api}/${id}`);
+  }
+
 }

@@ -40,6 +40,11 @@ export interface PedidoDetalle {
   items: PedidoItem[];
 }
 
+export interface PedidoRepetirItem {
+  productoId: number;
+  cantidad: number;
+}
+
 /* @Injectable({
   providedIn: 'root',
 })
