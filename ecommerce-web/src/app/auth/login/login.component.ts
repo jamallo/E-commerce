@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
@@ -20,7 +20,9 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   login(): void {
     this.authService.login(this.email, this.contrasenia)
@@ -28,6 +30,7 @@ export class LoginComponent {
       next: () => {
         const redirect = this.route.snapshot.queryParamMap.get('redirect');
         this.router.navigateByUrl(redirect ?? '/productos');
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Credenciales incorrectas';

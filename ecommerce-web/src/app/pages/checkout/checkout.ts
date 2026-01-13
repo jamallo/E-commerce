@@ -9,7 +9,7 @@ import { SpinnerService } from '../../shared/spinner/spinner.service';
 import { Direccion } from '../../shared/direccion/direccion.model';
 import { DireccionService } from '../perfil/perfil-direcciones/direccion.service';
 import { of, map } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+//import { switchMap } from 'rxjs/operators';
 
 type CheckoutStep = 'direccion' | 'confirmacion';
 
@@ -36,7 +36,7 @@ export class CheckoutComponent implements OnInit {
 
   direccionConfirmada: any;
   direccionSeleccionadaId?: number | null = null;
-  guardarDireccionNueva = false;
+  //guardarDireccionNueva = false;
 
   constructor(
     private backetService: BasketService,
@@ -102,7 +102,9 @@ export class CheckoutComponent implements OnInit {
   this.spinner.show();
 
   const formValue = this.formularioEnvio.value;
-  
+
+  const guardarDireccionNueva = formValue.guardarDireccionNueva;
+
   const direccionEnvio: Direccion = {
     nombre: formValue.nombre,
     apellidos: formValue.apellidos,
@@ -115,7 +117,7 @@ export class CheckoutComponent implements OnInit {
   };
 
   const guardarDireccion$ =
-    this.guardarDireccionNueva && this.direccionSeleccionadaId === null
+    guardarDireccionNueva && this.direccionSeleccionadaId === null
       ? this.direccionService.guardar(direccionEnvio).pipe(map(() => void 0))
       : of(void 0);
 
@@ -161,7 +163,16 @@ export class CheckoutComponent implements OnInit {
     const dir = this.direcciones.find(d => d.id === +id);
     if(dir) {
       this.direccionSeleccionadaId = dir.id!;
-      this.formularioEnvio.patchValue(dir);
+      this.formularioEnvio.patchValue({
+        nombre: dir.nombre,
+        apellidos: dir.apellidos,
+        direccion: dir.direccion,
+        ciudad: dir.ciudad,
+        codigoPostal: dir.codigoPostal,
+        provincia: dir.provincia,
+        telefono: dir.telefono,
+        guardarDireccionNueva: false
+      });
       this.cdr.detectChanges();
     }
   }

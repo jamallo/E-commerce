@@ -27,10 +27,12 @@
     <input formControlName="provincia" placeholder="Provincia">
     <input formControlName="telefono" placeholder="Teléfono">
 
-    <label>
-      <input type="checkbox" formControlName="guardarDireccionNueva()">
-      Guardar esta dirección
-    </label>
+    @if (direccionSeleccionadaId === null) {
+      <label>
+        <input type="checkbox" formControlName="guardarDireccionNueva">
+        Guardar esta dirección
+      </label>
+    }
   </form>
   <h3>Resumen</h3>
   @for (item of items; track item.product.id) {
