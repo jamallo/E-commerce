@@ -8,8 +8,8 @@
 
   <h3> Dirección guardada </h3>
 
-  <select #selectDireccion (change)="usarDireccion(selectDireccion.value)">
-    <option value="">Nueva dirección</option>
+  <select [ngModel]="direccionSeleccionadaId" (ngModelChange)="usarDireccion($event)">
+    <option [ngValue]="null">Nueva dirección</option>
     @for (direccion of direcciones; track direccion.id) {
       <option [value]="direccion.id">
         {{ direccion.direccion }} - {{ direccion.ciudad }}
@@ -27,6 +27,10 @@
     <input formControlName="provincia" placeholder="Provincia">
     <input formControlName="telefono" placeholder="Teléfono">
 
+    <label>
+      <input type="checkbox" formControlName="guardarDireccionNueva()">
+      Guardar esta dirección
+    </label>
   </form>
   <h3>Resumen</h3>
   @for (item of items; track item.product.id) {

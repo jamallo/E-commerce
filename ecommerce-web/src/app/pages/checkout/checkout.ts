@@ -1,20 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BasketItem } from '../../shared/basket/basket.model';
 import { BasketService } from '../../shared/basket/basket';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PedidoService } from '../../shared/pedido/pedido.service';
 import { Router } from '@angular/router';
 import { SpinnerService } from '../../shared/spinner/spinner.service';
 import { Direccion } from '../../shared/direccion/direccion.model';
 import { DireccionService } from '../perfil/perfil-direcciones/direccion.service';
+import { of, map } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 type CheckoutStep = 'direccion' | 'confirmacion';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -33,6 +35,8 @@ export class CheckoutComponent implements OnInit {
   error ='';
 
   direccionConfirmada: any;
+  direccionSeleccionadaId?: number | null = null;
+  guardarDireccionNueva = false;
 
   constructor(
     private backetService: BasketService,
@@ -40,7 +44,8 @@ export class CheckoutComponent implements OnInit {
     private pedidoService: PedidoService,
     private direccionService: DireccionService,
     private router: Router,
-    private spinner: SpinnerService
+    private spinner: SpinnerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -57,13 +62,23 @@ export class CheckoutComponent implements OnInit {
       codigoPostal: ['', Validators.required],
       provincia: ['', Validators.required],
       telefono: ['', Validators.required],
+      guardarDireccionNueva: [false],
     });
 
     this.direccionService.obtener().subscribe(d => {
       this.direcciones = d;
+
+      const principal = d.find(d => d.principal);
+      if (principal) {
+        setTimeout(() => {
+        this.usarDireccion(principal.id!);
+        //this.direccionSeleccionadaId = principal.id!;
+        //this.formularioEnvio.patchValue(principal);
+        });
+      }
     });
 
-    this.direccionService.guardar(this.direccionConfirmada).subscribe();
+    //this.direccionService.guardar(this.direccionConfirmada).subscribe();
   }
 
 
@@ -74,59 +89,80 @@ export class CheckoutComponent implements OnInit {
       this.formularioEnvio.markAllAsTouched();
       return;
     }
-    this.direccionConfirmada = this.formularioEnvio.value;
+    this.direccionConfirmada = {...this.formularioEnvio.value};
     this.step = 'confirmacion';
   }
 
   confirmarCompra(): void {
-    console.log('Iniciando confirmaCompra en checkout.ts');
-    console.log('Token en localStorage:', localStorage.getItem('token'));
-    /* if (this.formularioEnvio.invalid) {
-      this.formularioEnvio.markAllAsTouched();
-      return;
-    } */
+  console.log('Iniciando confirmarCompra');
+  console.log('Token:', localStorage.getItem('token'));
 
-    this.cargando = true;
-    this.error = '';
-    this.spinner.show();
+  this.cargando = true;
+  this.error = '';
+  this.spinner.show();
 
-    const datosEnvio = this.formularioEnvio.value;
+  const formValue = this.formularioEnvio.value;
+  
+  const direccionEnvio: Direccion = {
+    nombre: formValue.nombre,
+    apellidos: formValue.apellidos,
+    direccion: formValue.direccion,
+    ciudad: formValue.ciudad,
+    codigoPostal: formValue.codigoPostal,
+    provincia: formValue.provincia,
+    telefono: formValue.telefono,
+    principal: false
+  };
 
-    this.backetService.syncWithBackend().subscribe({
-      next: (response) => {
-        console.log('Sync exitoso: ', response);
-        this.pedidoService.checkout(datosEnvio).subscribe({
-          next: (pedidoResponse) => {
-            console.log('Checkout exitoso: ', pedidoResponse);
-            this.backetService.clear();
-            this.spinner.hide();
+  const guardarDireccion$ =
+    this.guardarDireccionNueva && this.direccionSeleccionadaId === null
+      ? this.direccionService.guardar(direccionEnvio).pipe(map(() => void 0))
+      : of(void 0);
 
-            setTimeout(() => {
+    guardarDireccion$.subscribe({
+    next: () => {
+      this.backetService.syncWithBackend().subscribe({
+        next: () => {
+          this.pedidoService.checkout(direccionEnvio).subscribe({
+            next: () => {
+              this.backetService.clear();
+              this.spinner.hide();
               this.router.navigate(['/checkout/exito']);
-            }, 300);
-          },
-          error: (error) => {
-            console.error('Error en checkout: ', error);
-            this.error = 'Error al procesar el pedido';
-            this.cargando = false;
-            this.spinner.hide();
-          }
-        });
-      },
-      error: (errors) => {
-        console.error('Error en sync: ', errors);
-        this.error = 'Error sincronizando la cesta';
-        this.spinner.hide();
-      }
-    });
-  }
+            },
+            error: () => {
+              this.error = 'Error al procesar el pedido';
+              this.cargando = false;
+              this.spinner.hide();
+            }
+          });
+        },
+        error: () => {
+          this.error = 'Error sincronizando la cesta';
+          this.spinner.hide();
+        }
+      });
+    },
+    error: () => {
+      this.error = 'Error al guardar la dirección';
+      this.cargando = false;
+      this.spinner.hide();
+    }
+  });
+}
 
   direcciones: Direccion[] = [];
 
-  usarDireccion(id: string) {
+  usarDireccion(id: number | null) {
+    if(id === null) {
+      this.direccionSeleccionadaId = null;
+      this.formularioEnvio.reset({guardarDireccionNueva: false});
+      return;
+    }
     const dir = this.direcciones.find(d => d.id === +id);
     if(dir) {
+      this.direccionSeleccionadaId = dir.id!;
       this.formularioEnvio.patchValue(dir);
+      this.cdr.detectChanges();
     }
   }
 }
