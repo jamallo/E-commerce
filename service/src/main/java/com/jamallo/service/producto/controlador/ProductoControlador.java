@@ -77,7 +77,7 @@ public class ProductoControlador {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "id") String direccion,
+            @RequestParam(defaultValue = "ASC") String direccion,
             @RequestParam(required = false) Boolean activo,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) BigDecimal precioMin,

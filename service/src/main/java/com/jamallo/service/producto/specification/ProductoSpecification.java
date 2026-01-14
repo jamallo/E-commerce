@@ -15,34 +15,54 @@ public class ProductoSpecification {
     ){
         return ((root, query, criteriaBuilder) -> {
 
-            var predicates = criteriaBuilder.conjunction();
+            var predicate = criteriaBuilder.conjunction();
+
+            System.out.println("=== PRODUCTO SPECIFICATION ===");
+            System.out.println("Nombre recibido: " + (nombre != null ? "'" + nombre + "'" : "null"));
+            System.out.println("Activo recibido: " + activo);
+            System.out.println("PrecioMin recibido: " + precioMin);
+            System.out.println("PrecioMax recibido: " + precioMax);
 
             if (nombre != null && !nombre.isBlank()) {
-                predicates.getExpressions().add(criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("nombre")),
-                        "%" + nombre.toLowerCase() + "%"
+                String nombreBusqueda = "%" + nombre.toLowerCase() + "%";
+                System.out.println("Aplicando filtro nombre LIKE: " + nombreBusqueda);
+
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("nombre")),
+                                nombreBusqueda
                 ));
             }
 
             if (activo != null) {
-                predicates.getExpressions().add(
+                System.out.println("Aplicando filtro activo: " + activo);
+                predicate = criteriaBuilder.and(
+                        predicate,
                         criteriaBuilder.equal(root.get("activo"), activo)
                 );
             }
 
             if (precioMin != null) {
-                predicates.getExpressions().add(
+                System.out.println("Aplicando filtro precioMin: " + precioMin);
+                predicate = criteriaBuilder.and(
+                        predicate,
                         criteriaBuilder.greaterThanOrEqualTo(root.get("precio"), precioMin)
                 );
             }
 
             if (precioMax != null) {
-                predicates.getExpressions().add(
+                System.out.println("Aplicando filtro precioMax: " + precioMax);
+                predicate = criteriaBuilder.and(
+                        predicate,
                         criteriaBuilder.lessThanOrEqualTo(root.get("precio"), precioMax)
                 );
             }
 
-            return predicates;
+            System.out.println("Predicates finales: " + predicate);
+            System.out.println("=============================");
+
+            return predicate;
         });
 
     }

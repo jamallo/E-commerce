@@ -5,6 +5,7 @@ import com.jamallo.service.cesta.modelo.CestaItem;
 import com.jamallo.service.cesta.repositorio.CestaRepository;
 import com.jamallo.service.entidad.Usuario;
 import com.jamallo.service.pedido.dto.*;
+import com.jamallo.service.pedido.mapper.PedidoMapper;
 import com.jamallo.service.pedido.modelo.EstadoPedido;
 import com.jamallo.service.pedido.modelo.Pedido;
 import com.jamallo.service.pedido.modelo.PedidoItem;
@@ -28,6 +29,9 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final CestaRepository cestaRepository;
     private final RepositorioUsuario usuarioRepository;
+    private final PedidoMapper pedidoMapper;
+
+
 
     @Transactional
     public PedidoResponseDTO checkout(String email, CheckoutRequestDTO dto) {
@@ -133,17 +137,13 @@ public class PedidoService {
     @Transactional(readOnly = true)
     public List<PedidoRepetirItemDTO> repetirPedido(Long pedidoId, String email) {
 
-        Pedido pedido = pedidoRepository.findById(pedidoId)
+        Pedido pedido = pedidoRepository.findByIdAndUsuarioEmail(pedidoId, email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         if (!pedido.getUsuario().getEmail().equals(email)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        return pedido.getItems().stream()
-                .map(item -> new PedidoRepetirItemDTO(
-                        item.getProducto().getId(),
-                        item.getCantidad()
-                )).toList();
+        return pedidoMapper.toRepetirPedidoItems(pedido);
     }
 }

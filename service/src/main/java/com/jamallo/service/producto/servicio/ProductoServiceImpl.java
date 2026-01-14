@@ -93,8 +93,11 @@ public class ProductoServiceImpl implements ProductoService {
             BigDecimal precioMin,
             BigDecimal precioMax)
     {
+        Sort sort = direccion.equalsIgnoreCase("DESC")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direccion, sortBy));
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Specification<Producto> spec =
                 ProductoSpecification.filtrar(nombre, activo, precioMin, precioMax);
