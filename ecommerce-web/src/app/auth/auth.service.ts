@@ -52,14 +52,22 @@ export class AuthService {
     return this.decodeToken()?.sub ?? null;
   }
 
-  isTokenExpired(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
+  isTokenValid(): boolean {
+  const token = this.getToken();
+  if (!token) return false;
 
+  try {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const exp = payload.exp * 1000;
-    return Date.now() > exp;
+    return Date.now() < exp;
+  } catch {
+    return false;
   }
+}
+
+isTokenExpired(): boolean {
+  return !this.isTokenValid();
+}
 
 
   isLogged(): boolean {

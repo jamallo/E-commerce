@@ -3,6 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { BasketItem } from './basket.model';
 import { Producto } from '../../core/productos/producto.model';
 import { HttpClient } from '@angular/common/http';
+import { PedidoRepetirItem } from '../pedido/pedido.model';
 
 @Injectable({
   providedIn: 'root',
@@ -84,18 +85,31 @@ export class BasketService {
     return this.http.post('http://localhost:8081/api/cesta', items);
   }
 
-  cargarDesdePedido(items: {productoId: number; cantidad: number}[]) {
-    this.clear();
+  cargarDesdePedido(items: PedidoRepetirItem[]){
+    const basketItems: BasketItem[] = items.map(i => ({
+      product: {
+        id: i.productoId,
+        nombre: i.nombre,
+        precio: i.precio
+      } as Partial<Producto> as Producto,
+      quantity: i.cantidad
+    }));
+    this.update(basketItems);
+    /* this.clear();
 
     items.forEach(i => {
       this.itemsSubject.next([
         ...this.itemsSubject.value,
         {
-          product: { id: i.productoId } as any,
+          product: {
+            id: i.productoId,
+            nombre: i.productoId,
+            precio: i.precio
+          } as any,
           quantity: i.cantidad
         }
       ]);
-    });
+    }); */
   }
 }
 

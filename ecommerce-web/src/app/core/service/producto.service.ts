@@ -40,26 +40,35 @@ export class ProductoService {
       precioMin?: number;
       precioMax?: number;
     },
-    sortBy: string = '',
-    direccion: string = ''
+    sortBy: string = 'id',
+    direccion: string = 'ASC'
   ){
-    let params = new HttpParams().set('page', page).set('size', size).set('sortBy', 'id');
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('direccion', direccion);
 
-    if (filtros?.nombre) {
-      params = params.set('nombre', filtros.nombre);
+    console.log('Filtros enviados: ', filtros);
+
+    if (filtros?.nombre && filtros.nombre.trim() !== '') {
+      params = params.set('nombre', filtros.nombre.trim());
     }
 
-    if (filtros?.activo !== undefined) {
-      params = params.set('activo', filtros.activo);
+    if (filtros?.activo !== undefined && filtros.activo !== null) {
+      params = params.set('activo', filtros.activo.toString());
     }
 
-    if (filtros?.precioMin !== undefined) {
-      params = params.set('precioMin', filtros.precioMin);
+    if (filtros?.precioMin !== undefined && filtros.precioMin !== null && filtros.precioMin >0) {
+      params = params.set('precioMin', filtros.precioMin.toString());
     }
 
-    if (filtros?.precioMax !== undefined) {
-      params = params.set('precioMax', filtros.precioMax);
+    if (filtros?.precioMax !== undefined && filtros.precioMax !== null && filtros.precioMax > 0) {
+      params = params.set('precioMax', filtros.precioMax.toString());
     }
+
+    console.log('URL: ', this.API_URL);
+    console.log('Params: ', params.toString());
 
     return this.http.get<PaginaResponseDTO<Producto>>(
       this.API_URL, { params }

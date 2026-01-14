@@ -32,8 +32,8 @@ export class PedidosComponent implements OnInit {
     })
   }
 
-  repetirPedido(id: number) {
-    this.pedidoService.repetirPedido(id).subscribe(items => {
+  repetirPedido(pedidoid: number) {
+    this.pedidoService.repetirPedido(pedidoid).subscribe(items => {
       this.basketService.cargarDesdePedido(items);
       this.router.navigate(['/cesta']);
     })

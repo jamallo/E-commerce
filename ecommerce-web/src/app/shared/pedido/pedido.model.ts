@@ -42,6 +42,8 @@ export interface PedidoDetalle {
 
 export interface PedidoRepetirItem {
   productoId: number;
+  nombre: string;
+  precio: number;
   cantidad: number;
 }
 
