@@ -9,16 +9,36 @@ import { SpinnerService } from '../../shared/spinner/spinner.service';
 import { Direccion } from '../../shared/direccion/direccion.model';
 import { DireccionService } from '../perfil/perfil-direcciones/direccion.service';
 import { of, map } from 'rxjs';
-//import { switchMap } from 'rxjs/operators';
+import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
+import { PagoService } from '../../core/service/pago.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
+
 
 type CheckoutStep = 'direccion' | 'confirmacion';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatCardModule,
+    MatDividerModule
+  ],
   templateUrl: './checkout.html',
-  styleUrl: './checkout.css',
+  styleUrl: './checkout.scss',
 })
 
 
@@ -38,24 +58,29 @@ export class CheckoutComponent implements OnInit {
   direccionSeleccionadaId?: number | null = null;
   //guardarDireccionNueva = false;
 
+  stripe!: Stripe;
+  elements!: StripeElements;
+  cardElement: any;
+
   constructor(
     private backetService: BasketService,
     private fb: FormBuilder,
     private pedidoService: PedidoService,
     private direccionService: DireccionService,
+    private pagoService: PagoService,
     private router: Router,
     private spinner: SpinnerService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.backetService.items$.subscribe(items => {
       this.items = items;
       this.total = this.backetService.getTotal();
     });
 
     this.formularioEnvio = this.fb.group({
-      nombre: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-ZÀ-ÿ\s]+$/)]],
       apellidos: ['', Validators.required],
       direccion: ['', Validators.required],
       ciudad: ['', Validators.required],
@@ -77,8 +102,6 @@ export class CheckoutComponent implements OnInit {
         });
       }
     });
-
-    //this.direccionService.guardar(this.direccionConfirmada).subscribe();
   }
 
 
@@ -91,6 +114,8 @@ export class CheckoutComponent implements OnInit {
     }
     this.direccionConfirmada = {...this.formularioEnvio.value};
     this.step = 'confirmacion';
+
+    this.inicializarStripe();
   }
 
   confirmarCompra(): void {
@@ -176,36 +201,58 @@ export class CheckoutComponent implements OnInit {
       this.cdr.detectChanges();
     }
   }
+
+  confirmarPago() {
+    console.log('Confirmar pago: llamando backend');
+
+    this.pagoService.crearPaymentIntent().subscribe({
+      next: async (res) => {
+        console.log('Respuesta backend: ', res);
+
+        if (!res || !res.clientSecret) {
+          console.error('clientSecret NO Recibido');
+          return
+        }
+      const result = await this.stripe.confirmCardPayment(
+        res.clientSecret,
+        {
+          payment_method: {
+            card: this.cardElement
+          }
+        }
+      );
+
+      console.log('Resultado Stripe:', result);
+
+      if (result.error)  {
+        console.error('Error en el pago: ', result.error.message);
+        this.error = result.error.message || 'Error en el pago';
+      } else if (result.paymentIntent?.status === 'succeeded') {
+          console.log('Pago realizado correctamente');
+          this.router.navigate(['/checkout/exito']);
+        }
+      },
+      error: err => {
+        console.error('Error backend: ', err);
+      }
+    });
+  }
+
+  async inicializarStripe() {
+    if (this.stripe) return;
+
+    this.stripe = await loadStripe(
+      'pk_test_**************'
+    ) as Stripe;
+
+    this.elements = this.stripe.elements();
+    this.cardElement = this.elements.create('card');
+
+    setTimeout(() => {
+      this.cardElement.mount('#card-element');
+    });
+  }
 }
 
-/* confirmarCompra(): void {
-  if (this.formularioEnvio.invalid) {
-    this.formularioEnvio.markAllAsTouched();
-    return;
-  }
-  this.cargando = true;
 
-  const direccionEnvio = this.formularioEnvio.value;
-
-  this.pedidoService.checkout({
-    direccion: direccionEnvio
-  }).subscribe({
-    next: () => {
-      this.backetService.clear();
-      this.router.navigate(['/checkout/exito']);
-    },
-    error: () => {
-      this.error = 'Error al procesar pedido';
-      this.cargando = false;
-    }
-  });
-  } */
-
-
-  /* const datosEnvio = this.formularioEnvio.value;
-
-  console.log('Datos de envío: ', datosEnvio);
-
-  //TODO: guardar dirección, crear pedido, ir al pago
-} */
 

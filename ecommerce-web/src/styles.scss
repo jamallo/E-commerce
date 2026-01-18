@@ -1,0 +1,28 @@
+@use '@angular/material' as mat;
+@use './styles/theme/theme-colors' as theme;
+
+/* 1️⃣ Inicializa Material */
+@include mat.core();
+
+/* 2️⃣ Define el theme M3 correctamente */
+$jamallo-theme: mat.define-theme((
+  color: (
+    primary: theme.$primary-palette,
+    tertiary: theme.$tertiary-palette,
+  )
+));
+
+/* 3️⃣ Aplica el theme */
+@include mat.all-component-themes($jamallo-theme);
+
+/* 4️⃣ Estilos base */
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}

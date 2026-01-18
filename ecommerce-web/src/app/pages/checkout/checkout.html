@@ -2,7 +2,168 @@
 
 <!-- ESTADO 1: DIRECCIÓN -->
  @if (step === 'direccion') {
-<div>
+  <mat-card class="checkout-card">
+
+  <h2>Dirección de envío</h2>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Dirección guardada</mat-label>
+    <mat-select [ngModel]="direccionSeleccionadaId" (ngModelChange)="usarDireccion($event)">
+      <mat-option [value]="null">Nueva dirección</mat-option>
+      @for (direccion of direcciones; track direccion.id) {
+        <mat-option [value]="direccion.id">
+          {{ direccion.direccion }} - {{ direccion.ciudad }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <form [formGroup]="formularioEnvio" class="form-grid">
+
+    <!-- Nombre -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre">
+      <mat-icon matSuffix *ngIf="formularioEnvio.get('nombre')?.valid">check_circle</mat-icon>
+      <mat-error *ngIf="formularioEnvio.get('nombre')?.invalid">
+        Mínimo 3 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Apellidos -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Apellidos</mat-label>
+      <input matInput formControlName="apellidos">
+      <mat-icon matSuffix *ngIf="formularioEnvio.get('apellidos')?.valid">check_circle</mat-icon>
+    </mat-form-field>
+
+    <!-- Dirección -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="direccion">
+    </mat-form-field>
+
+    <!-- Ciudad -->
+    <mat-form-field appearance="outline">
+      <mat-label>Ciudad</mat-label>
+      <input matInput formControlName="ciudad">
+    </mat-form-field>
+
+    <!-- CP -->
+    <mat-form-field appearance="outline">
+      <mat-label>Código Postal</mat-label>
+      <input matInput formControlName="codigoPostal">
+    </mat-form-field>
+
+    <!-- Provincia -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Provincia</mat-label>
+      <input matInput formControlName="provincia">
+    </mat-form-field>
+
+    <!-- Teléfono -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono">
+    </mat-form-field>
+
+    @if (direccionSeleccionadaId === null) {
+      <mat-checkbox formControlName="guardarDireccionNueva">
+        Guardar esta dirección
+      </mat-checkbox>
+    }
+
+  </form>
+
+  <button mat-raised-button color="primary" (click)="continuar()">
+    Continuar
+  </button>
+
+</mat-card>
+ }
+
+ @if (step === 'confirmacion') {
+
+<mat-card class="checkout-card confirmacion">
+
+  <h2>Confirmar pedido</h2>
+
+  <!-- DIRECCIÓN -->
+  <section class="bloque">
+    <h3>
+      <mat-icon>location_on</mat-icon>
+      Dirección de envío
+    </h3>
+
+    <p class="texto">
+      {{ direccionConfirmada.nombre }} {{ direccionConfirmada.apellidos }}<br>
+      {{ direccionConfirmada.direccion }}<br>
+      {{ direccionConfirmada.ciudad }} {{ direccionConfirmada.codigoPostal }},
+      {{ direccionConfirmada.provincia }}<br>
+      Tel: {{ direccionConfirmada.telefono }}
+    </p>
+
+    <button mat-button color="primary" (click)="step = 'direccion'">
+      Editar dirección
+    </button>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <!-- PRODUCTOS -->
+  <section class="bloque">
+    <h3>
+      <mat-icon>shopping_bag</mat-icon>
+      Productos
+    </h3>
+    @for (item of items; track item.product.id){
+      <div class="producto">
+        <span>{{ item.product.nombre }}</span>
+        <span class="cantidad">× {{ item.quantity }}</span>
+      </div>
+    }
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <!-- TOTAL -->
+  <section class="bloque total">
+    <span>Total</span>
+    <span class="precio">{{ total | currency:'EUR' }}</span>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <!-- PAGO -->
+  <section class="bloque pago">
+    <h3>
+      <mat-icon>credit_card</mat-icon>
+      Pago seguro
+    </h3>
+
+    <div id="card-element" class="stripe-box"></div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="btn-pago"
+      (click)="confirmarPago()"
+    >
+      Confirmar y pagar
+    </button>
+
+    @if (error) {
+      <p class="error-box">{{ error }}</p>
+    }
+  </section>
+
+</mat-card>
+
+}
+
+
+
+<!-- <div>
 
   <h2>Dirección de envío</h2>
 
@@ -47,7 +208,7 @@
 </div>
  }
 
-<!-- ESTADO 2: CONFIRMACIÓN -->
+ ESTADO 2: CONFIRMACIÓN
  @if (step === 'confirmacion') {
 <div>
 
@@ -71,6 +232,12 @@
 
   <button (click)="step = 'direccion'">Volver</button>
   <hr>
+
+  <div id="card-element"></div>
+
+  <button (click)="confirmarPago()">
+    Confirmar pago
+  </button>
   <button (click)="confirmarCompra()" [disabled]="cargando" class="btn-principal">
     {{ cargando ? 'Procesando...' : 'Confirmar compra' }}
   </button>
@@ -78,4 +245,4 @@
   <p class="error-box">{{ error }}</p>
   }
 </div>
-}
+} -->

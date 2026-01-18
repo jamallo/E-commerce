@@ -43,7 +43,9 @@ export class TarjetaProductoComponent {
       return;
     }
     this.basketService.add(this.producto);
+
     this.notificationService.success('Producto añadido a la cesta');
+  
 
     const cesta = document.getElementById('cesta-flotante');
 
