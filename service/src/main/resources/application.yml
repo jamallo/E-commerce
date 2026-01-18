@@ -34,3 +34,4 @@ springdoc:
 jwt:
   secret: "clave_super_secreta_para_jwt"
   expiracion: 3600000
+

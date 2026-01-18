@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.exec.spi.StatementCreatorHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,12 +25,20 @@ public class FiltroJwtAutenticacion extends OncePerRequestFilter{ //El filtro se
 
     private final ServicioJwt servicioJwt;
 
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+
+        //Con esto indicamos que STRIPE no envía JWT.
+        String path = request.getRequestURI();
+        if (path.startsWith("/api/webhook/stripe")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 1 - Obtener la cabecera Authorization
         String cabeceraAuth = request.getHeader("Authorization"); //Leer el header Authorization, el cliente enviará: Authorization: Bearer ...

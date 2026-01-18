@@ -146,4 +146,48 @@ public class PedidoService {
 
         return pedidoMapper.toRepetirPedidoItems(pedido);
     }
+
+    @Transactional(readOnly = true)
+    public Pedido obtenerPedidoPendiente(String email) {
+
+        return pedidoRepository
+                .findFirstByUsuarioEmailAndEstadoOrderByFechaCreacionDesc(
+                        email,
+                        EstadoPedido.PENDIENTE
+                ).orElseThrow(() ->
+                        new RuntimeException("No hay pedido pendiente para el usuario"));
+    }
+
+    @Transactional
+    public void asignarPaymentIntent(Long pedidoId, String paymentIntentId) {
+
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() ->
+                        new RuntimeException("Pedido no encontrado"));
+
+        pedido.setPaymentIntentId(paymentIntentId);
+        pedidoRepository.save(pedido);
+    }
+
+    @Transactional
+    public void marcarPedidoComoPagado(String paymentIntentId) {
+        var pedidoOpt = pedidoRepository.findByPaymentIntentId(paymentIntentId);
+
+        if (pedidoOpt.isEmpty()) {
+            System.out.println(("No existe pedido para paymentIntentId: " + paymentIntentId));
+            return;
+        }
+
+        Pedido pedido = pedidoOpt.get();
+
+        if (pedido.getEstado() == EstadoPedido.CONFIRMADO) {
+            System.out.println("Pedido ya confirmado" + pedido.getId());
+            return;
+        }
+
+        pedido.setEstado(EstadoPedido.CONFIRMADO);
+        pedidoRepository.save(pedido);
+
+        System.out.println("Pedido confirmado correctamente: " + pedido.getId());
+    }
 }

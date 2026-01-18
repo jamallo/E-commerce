@@ -47,6 +47,10 @@ public class ConfiguracionSeguridadWeb {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        //PAGO
+                        .requestMatchers("/api/webhook/stripe").permitAll()
+                        .requestMatchers("/api/webhook/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/pago/**").permitAll()
                         //PUBLICO
                         .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/productos").permitAll()

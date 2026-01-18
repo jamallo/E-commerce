@@ -38,6 +38,8 @@ public class Pedido {
     private String provincia;
     private String telefono;
 
+    private String paymentIntentId;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItem> items = new ArrayList<>();
 }
