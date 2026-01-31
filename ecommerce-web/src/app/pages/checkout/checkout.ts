@@ -8,16 +8,18 @@ import { Router } from '@angular/router';
 import { SpinnerService } from '../../shared/spinner/spinner.service';
 import { Direccion } from '../../shared/direccion/direccion.model';
 import { DireccionService } from '../perfil/perfil-direcciones/direccion.service';
-import { of, map } from 'rxjs';
+import { of, map, Observable, startWith } from 'rxjs';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { PagoService } from '../../core/service/pago.service';
-import { MatInputModule } from '@angular/material/input';
+import { MatFormField, MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule} from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 type CheckoutStep = 'direccion' | 'confirmacion';
@@ -35,14 +37,32 @@ type CheckoutStep = 'direccion' | 'confirmacion';
     MatCheckboxModule,
     MatIconModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatFormField,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 })
 
 
+
 export class CheckoutComponent implements OnInit {
+
+  provincias: string[] = [
+    'Álava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila',
+    'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria',
+    'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Girona', 'Granada',
+    'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Illes Balears',
+    'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lleida',
+    'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Ourense',
+    'Palencia', 'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife',
+    'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo',
+    'Valencia', 'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza'
+  ];
+
+  provinciasFiltradas!: Observable<string[]>;
 
   step: CheckoutStep = 'direccion';
 
@@ -81,12 +101,13 @@ export class CheckoutComponent implements OnInit {
 
     this.formularioEnvio = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-ZÀ-ÿ\s]+$/)]],
-      apellidos: ['', Validators.required],
+      apellidos: ['', [Validators.required, Validators.minLength(3)]],
+      tipoVia: ['Calle', Validators.required],
       direccion: ['', Validators.required],
       ciudad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]],
       provincia: ['', Validators.required],
-      telefono: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
       guardarDireccionNueva: [false],
     });
 
@@ -102,6 +123,13 @@ export class CheckoutComponent implements OnInit {
         });
       }
     });
+
+    this.provinciasFiltradas = this.formularioEnvio
+      .get('provincia')!
+      .valueChanges.pipe(
+        startWith(''),
+        map(value => this.filtrarProvincias(value || ''))
+      );
   }
 
 
@@ -203,16 +231,22 @@ export class CheckoutComponent implements OnInit {
   }
 
   confirmarPago() {
+    if (this.cestaVacia || this.cargando) return;
     console.log('Confirmar pago: llamando backend');
+    this.cargando = true;
+    this.error = '';
+    //this.spinner.show();
 
     this.pagoService.crearPaymentIntent().subscribe({
       next: async (res) => {
         console.log('Respuesta backend: ', res);
 
-        if (!res || !res.clientSecret) {
+        /* if (!res || !res?.clientSecret) {
+          this.error = 'Error iniciando el pago';
+          this.spinner.hide();
           console.error('clientSecret NO Recibido');
           return
-        }
+        } */
       const result = await this.stripe.confirmCardPayment(
         res.clientSecret,
         {
@@ -227,13 +261,19 @@ export class CheckoutComponent implements OnInit {
       if (result.error)  {
         console.error('Error en el pago: ', result.error.message);
         this.error = result.error.message || 'Error en el pago';
+        this.cargando = false;
+        //this.spinner.hide();
       } else if (result.paymentIntent?.status === 'succeeded') {
           console.log('Pago realizado correctamente');
-          this.router.navigate(['/checkout/exito']);
+          this.finalizarPedido();
+          //this.router.navigate(['/checkout/exito']);
         }
       },
       error: err => {
         console.error('Error backend: ', err);
+        this.error = 'Error conectando con el pago';
+        this.cargando = false;
+        //this.spinner.hide();
       }
     });
   }
@@ -242,7 +282,7 @@ export class CheckoutComponent implements OnInit {
     if (this.stripe) return;
 
     this.stripe = await loadStripe(
-      'pk_test_**************'
+      'pk_test_51Spcg7BgJyR1F4c1nVXT7mqXGSISrxAvZFIf5NXwjFNd8ErbHh1pnsdM5qZ87ooMvGDGxlXQlj7U9iI03n0VQbTg00NZfFBkaS'
     ) as Stripe;
 
     this.elements = this.stripe.elements();
@@ -251,6 +291,86 @@ export class CheckoutComponent implements OnInit {
     setTimeout(() => {
       this.cardElement.mount('#card-element');
     });
+  }
+
+  private filtrarProvincias(valor: string): string[] {
+    if (!valor || valor.length < 2) {
+      return [];
+    }
+    const filtro = valor.toLowerCase();
+    return this.provincias.filter(p =>
+      p.toLowerCase().includes(filtro)
+    );
+  }
+
+  private finalizarPedido() {
+    const formValue = this.formularioEnvio.value;
+
+    const direccionEnvio: Direccion = {
+      nombre: formValue.nombre,
+      apellidos: formValue.apellidos,
+      direccion: formValue.direccion,
+      ciudad: formValue.ciudad,
+      codigoPostal: formValue.codigoPostal,
+      provincia: formValue.provincia,
+      telefono: formValue.telefono,
+      principal: false
+    };
+
+    const guardarDireccion$: Observable<void> =
+    formValue.guardarDireccionNueva && this.direccionSeleccionadaId === null
+    ? this.direccionService.guardar(direccionEnvio).pipe(map(() => void 0))
+    : of(void 0);
+
+    guardarDireccion$.subscribe({
+      next: () => {
+        this.backetService.syncWithBackend().subscribe({
+          next: () => {
+            this.pedidoService.checkout(direccionEnvio).subscribe({
+              next: () => {
+                this.backetService.clear();
+                this.spinner.hide();
+                this.router.navigate(['/checkout/exito']);
+              },
+              error: () => {
+                this.error = 'Error creando el pedido';
+              }
+            });
+          }
+        });
+      },
+      error: () => {
+        this.error = 'Error guardando la dirección';
+        this.spinner.hide();
+      }
+    });
+  }
+
+  incrementar(item: BasketItem) {
+    this.backetService.add(item.product);
+    this.actualizarTotal();
+  }
+
+  decrementar(item: BasketItem) {
+    if (item.quantity > 1) {
+      this.backetService.decrease(item.product.id);
+    } else {
+      this.backetService.remove(item.product.id);
+    }
+    this.actualizarTotal();
+  }
+
+  eliminar(item: BasketItem) {
+    this.backetService.remove(item.product.id);
+    this.actualizarTotal();
+  }
+
+  private actualizarTotal() {
+    this.total = this.backetService.getTotal();
+  }
+
+  get cestaVacia(): boolean {
+    return this.items.length === 0;
   }
 }
 

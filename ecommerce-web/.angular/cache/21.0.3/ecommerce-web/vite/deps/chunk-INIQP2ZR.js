@@ -1,27 +1,31 @@
 import {
-  coerceArray
-} from "./chunk-AIEYJCOW.js";
+  _getEventTarget,
+  _getFocusedElementPierceShadowDom,
+  _getShadowRoot,
+  normalizePassiveListenerOptions
+} from "./chunk-XA6252L2.js";
 import {
   _VisuallyHiddenLoader,
   _setInnerHtml
 } from "./chunk-EM4I3Q3U.js";
 import {
   DomSanitizer
-} from "./chunk-S63KZ5YZ.js";
+} from "./chunk-HBVY2GX6.js";
+import {
+  BreakpointObserver
+} from "./chunk-SEAZNDDS.js";
 import {
   _CdkPrivateStyleLoader
 } from "./chunk-7JCNPPTE.js";
-import {
-  Platform
-} from "./chunk-TKQMFQZX.js";
 import {
   coerceElement,
   coerceNumberProperty
 } from "./chunk-HDQPU2PT.js";
 import {
-  ANIMATION_MODULE_TYPE,
+  Platform
+} from "./chunk-TKQMFQZX.js";
+import {
   APP_ID,
-  CSP_NONCE,
   DOCUMENT,
   Directive,
   ElementRef,
@@ -53,8 +57,6 @@ import {
   Observable,
   Subject,
   Subscription,
-  combineLatest,
-  concat,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -62,7 +64,6 @@ import {
   map,
   of,
   skip,
-  startWith,
   take,
   takeUntil,
   tap
@@ -71,6 +72,15 @@ import {
   __spreadProps,
   __spreadValues
 } from "./chunk-GOMI4DH3.js";
+
+// node_modules/@angular/cdk/fesm2022/_fake-event-detection-chunk.mjs
+function isFakeMousedownFromScreenReader(event) {
+  return event.buttons === 0 || event.detail === 0;
+}
+function isFakeTouchstartFromScreenReader(event) {
+  const touch = event.touches && event.touches[0] || event.changedTouches && event.changedTouches[0];
+  return !!touch && touch.identifier === -1 && (touch.radiusX == null || touch.radiusX === 1) && (touch.radiusY == null || touch.radiusY === 1);
+}
 
 // node_modules/@angular/cdk/fesm2022/_keycodes-chunk.mjs
 var TAB = 9;
@@ -94,296 +104,6 @@ var A = 65;
 var Z = 90;
 var META = 91;
 var MAC_META = 224;
-
-// node_modules/@angular/cdk/fesm2022/_shadow-dom-chunk.mjs
-var shadowDomIsSupported;
-function _supportsShadowDom() {
-  if (shadowDomIsSupported == null) {
-    const head = typeof document !== "undefined" ? document.head : null;
-    shadowDomIsSupported = !!(head && (head.createShadowRoot || head.attachShadow));
-  }
-  return shadowDomIsSupported;
-}
-function _getShadowRoot(element) {
-  if (_supportsShadowDom()) {
-    const rootNode = element.getRootNode ? element.getRootNode() : null;
-    if (typeof ShadowRoot !== "undefined" && ShadowRoot && rootNode instanceof ShadowRoot) {
-      return rootNode;
-    }
-  }
-  return null;
-}
-function _getFocusedElementPierceShadowDom() {
-  let activeElement = typeof document !== "undefined" && document ? document.activeElement : null;
-  while (activeElement && activeElement.shadowRoot) {
-    const newActiveElement = activeElement.shadowRoot.activeElement;
-    if (newActiveElement === activeElement) {
-      break;
-    } else {
-      activeElement = newActiveElement;
-    }
-  }
-  return activeElement;
-}
-function _getEventTarget(event) {
-  return event.composedPath ? event.composedPath()[0] : event.target;
-}
-
-// node_modules/@angular/cdk/fesm2022/observers.mjs
-function shouldIgnoreRecord(record) {
-  if (record.type === "characterData" && record.target instanceof Comment) {
-    return true;
-  }
-  if (record.type === "childList") {
-    for (let i = 0; i < record.addedNodes.length; i++) {
-      if (!(record.addedNodes[i] instanceof Comment)) {
-        return false;
-      }
-    }
-    for (let i = 0; i < record.removedNodes.length; i++) {
-      if (!(record.removedNodes[i] instanceof Comment)) {
-        return false;
-      }
-    }
-    return true;
-  }
-  return false;
-}
-var MutationObserverFactory = class _MutationObserverFactory {
-  create(callback) {
-    return typeof MutationObserver === "undefined" ? null : new MutationObserver(callback);
-  }
-  static ɵfac = function MutationObserverFactory_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _MutationObserverFactory)();
-  };
-  static ɵprov = ɵɵdefineInjectable({
-    token: _MutationObserverFactory,
-    factory: _MutationObserverFactory.ɵfac,
-    providedIn: "root"
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MutationObserverFactory, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], null, null);
-})();
-var ContentObserver = class _ContentObserver {
-  _mutationObserverFactory = inject(MutationObserverFactory);
-  _observedElements = /* @__PURE__ */ new Map();
-  _ngZone = inject(NgZone);
-  constructor() {
-  }
-  ngOnDestroy() {
-    this._observedElements.forEach((_, element) => this._cleanupObserver(element));
-  }
-  observe(elementOrRef) {
-    const element = coerceElement(elementOrRef);
-    return new Observable((observer) => {
-      const stream = this._observeElement(element);
-      const subscription = stream.pipe(map((records) => records.filter((record) => !shouldIgnoreRecord(record))), filter((records) => !!records.length)).subscribe((records) => {
-        this._ngZone.run(() => {
-          observer.next(records);
-        });
-      });
-      return () => {
-        subscription.unsubscribe();
-        this._unobserveElement(element);
-      };
-    });
-  }
-  _observeElement(element) {
-    return this._ngZone.runOutsideAngular(() => {
-      if (!this._observedElements.has(element)) {
-        const stream = new Subject();
-        const observer = this._mutationObserverFactory.create((mutations) => stream.next(mutations));
-        if (observer) {
-          observer.observe(element, {
-            characterData: true,
-            childList: true,
-            subtree: true
-          });
-        }
-        this._observedElements.set(element, {
-          observer,
-          stream,
-          count: 1
-        });
-      } else {
-        this._observedElements.get(element).count++;
-      }
-      return this._observedElements.get(element).stream;
-    });
-  }
-  _unobserveElement(element) {
-    if (this._observedElements.has(element)) {
-      this._observedElements.get(element).count--;
-      if (!this._observedElements.get(element).count) {
-        this._cleanupObserver(element);
-      }
-    }
-  }
-  _cleanupObserver(element) {
-    if (this._observedElements.has(element)) {
-      const {
-        observer,
-        stream
-      } = this._observedElements.get(element);
-      if (observer) {
-        observer.disconnect();
-      }
-      stream.complete();
-      this._observedElements.delete(element);
-    }
-  }
-  static ɵfac = function ContentObserver_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _ContentObserver)();
-  };
-  static ɵprov = ɵɵdefineInjectable({
-    token: _ContentObserver,
-    factory: _ContentObserver.ɵfac,
-    providedIn: "root"
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ContentObserver, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], () => [], null);
-})();
-var CdkObserveContent = class _CdkObserveContent {
-  _contentObserver = inject(ContentObserver);
-  _elementRef = inject(ElementRef);
-  event = new EventEmitter();
-  get disabled() {
-    return this._disabled;
-  }
-  set disabled(value) {
-    this._disabled = value;
-    this._disabled ? this._unsubscribe() : this._subscribe();
-  }
-  _disabled = false;
-  get debounce() {
-    return this._debounce;
-  }
-  set debounce(value) {
-    this._debounce = coerceNumberProperty(value);
-    this._subscribe();
-  }
-  _debounce;
-  _currentSubscription = null;
-  constructor() {
-  }
-  ngAfterContentInit() {
-    if (!this._currentSubscription && !this.disabled) {
-      this._subscribe();
-    }
-  }
-  ngOnDestroy() {
-    this._unsubscribe();
-  }
-  _subscribe() {
-    this._unsubscribe();
-    const stream = this._contentObserver.observe(this._elementRef);
-    this._currentSubscription = (this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream).subscribe(this.event);
-  }
-  _unsubscribe() {
-    this._currentSubscription?.unsubscribe();
-  }
-  static ɵfac = function CdkObserveContent_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _CdkObserveContent)();
-  };
-  static ɵdir = ɵɵdefineDirective({
-    type: _CdkObserveContent,
-    selectors: [["", "cdkObserveContent", ""]],
-    inputs: {
-      disabled: [2, "cdkObserveContentDisabled", "disabled", booleanAttribute],
-      debounce: "debounce"
-    },
-    outputs: {
-      event: "cdkObserveContent"
-    },
-    exportAs: ["cdkObserveContent"]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CdkObserveContent, [{
-    type: Directive,
-    args: [{
-      selector: "[cdkObserveContent]",
-      exportAs: "cdkObserveContent"
-    }]
-  }], () => [], {
-    event: [{
-      type: Output,
-      args: ["cdkObserveContent"]
-    }],
-    disabled: [{
-      type: Input,
-      args: [{
-        alias: "cdkObserveContentDisabled",
-        transform: booleanAttribute
-      }]
-    }],
-    debounce: [{
-      type: Input
-    }]
-  });
-})();
-var ObserversModule = class _ObserversModule {
-  static ɵfac = function ObserversModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _ObserversModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _ObserversModule,
-    imports: [CdkObserveContent],
-    exports: [CdkObserveContent]
-  });
-  static ɵinj = ɵɵdefineInjector({
-    providers: [MutationObserverFactory]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ObserversModule, [{
-    type: NgModule,
-    args: [{
-      imports: [CdkObserveContent],
-      exports: [CdkObserveContent],
-      providers: [MutationObserverFactory]
-    }]
-  }], null, null);
-})();
-
-// node_modules/@angular/cdk/fesm2022/_fake-event-detection-chunk.mjs
-function isFakeMousedownFromScreenReader(event) {
-  return event.buttons === 0 || event.detail === 0;
-}
-function isFakeTouchstartFromScreenReader(event) {
-  const touch = event.touches && event.touches[0] || event.changedTouches && event.changedTouches[0];
-  return !!touch && touch.identifier === -1 && (touch.radiusX == null || touch.radiusX === 1) && (touch.radiusY == null || touch.radiusY === 1);
-}
-
-// node_modules/@angular/cdk/fesm2022/_passive-listeners-chunk.mjs
-var supportsPassiveEvents;
-function supportsPassiveEventListeners() {
-  if (supportsPassiveEvents == null && typeof window !== "undefined") {
-    try {
-      window.addEventListener("test", null, Object.defineProperty({}, "passive", {
-        get: () => supportsPassiveEvents = true
-      }));
-    } finally {
-      supportsPassiveEvents = supportsPassiveEvents || false;
-    }
-  }
-  return supportsPassiveEvents;
-}
-function normalizePassiveListenerOptions(options) {
-  return supportsPassiveEventListeners() ? options : !!options.capture;
-}
 
 // node_modules/@angular/cdk/fesm2022/_focus-monitor-chunk.mjs
 var INPUT_MODALITY_DETECTOR_OPTIONS = new InjectionToken("cdk-input-modality-detector-options");
@@ -432,7 +152,7 @@ var InputModalityDetector = class _InputModalityDetector {
   };
   constructor() {
     const ngZone = inject(NgZone);
-    const document2 = inject(DOCUMENT);
+    const document = inject(DOCUMENT);
     const options = inject(INPUT_MODALITY_DETECTOR_OPTIONS, {
       optional: true
     });
@@ -442,7 +162,7 @@ var InputModalityDetector = class _InputModalityDetector {
     if (this._platform.isBrowser) {
       const renderer = inject(RendererFactory2).createRenderer(null, null);
       this._listenerCleanups = ngZone.runOutsideAngular(() => {
-        return [renderer.listen(document2, "keydown", this._onKeydown, modalityEventListenerOptions), renderer.listen(document2, "mousedown", this._onMousedown, modalityEventListenerOptions), renderer.listen(document2, "touchstart", this._onTouchstart, modalityEventListenerOptions)];
+        return [renderer.listen(document, "keydown", this._onKeydown, modalityEventListenerOptions), renderer.listen(document, "mousedown", this._onMousedown, modalityEventListenerOptions), renderer.listen(document, "touchstart", this._onTouchstart, modalityEventListenerOptions)];
       });
     }
   }
@@ -761,151 +481,234 @@ var CdkMonitorFocus = class _CdkMonitorFocus {
   });
 })();
 
-// node_modules/@angular/cdk/fesm2022/_breakpoints-observer-chunk.mjs
-var mediaQueriesForWebkitCompatibility = /* @__PURE__ */ new Set();
-var mediaQueryStyleNode;
-var MediaMatcher = class _MediaMatcher {
-  _platform = inject(Platform);
-  _nonce = inject(CSP_NONCE, {
-    optional: true
-  });
-  _matchMedia;
-  constructor() {
-    this._matchMedia = this._platform.isBrowser && window.matchMedia ? window.matchMedia.bind(window) : noopMatchMedia;
+// node_modules/@angular/cdk/fesm2022/observers.mjs
+function shouldIgnoreRecord(record) {
+  if (record.type === "characterData" && record.target instanceof Comment) {
+    return true;
   }
-  matchMedia(query) {
-    if (this._platform.WEBKIT || this._platform.BLINK) {
-      createEmptyStyleRule(query, this._nonce);
+  if (record.type === "childList") {
+    for (let i = 0; i < record.addedNodes.length; i++) {
+      if (!(record.addedNodes[i] instanceof Comment)) {
+        return false;
+      }
     }
-    return this._matchMedia(query);
+    for (let i = 0; i < record.removedNodes.length; i++) {
+      if (!(record.removedNodes[i] instanceof Comment)) {
+        return false;
+      }
+    }
+    return true;
   }
-  static ɵfac = function MediaMatcher_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _MediaMatcher)();
+  return false;
+}
+var MutationObserverFactory = class _MutationObserverFactory {
+  create(callback) {
+    return typeof MutationObserver === "undefined" ? null : new MutationObserver(callback);
+  }
+  static ɵfac = function MutationObserverFactory_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _MutationObserverFactory)();
   };
   static ɵprov = ɵɵdefineInjectable({
-    token: _MediaMatcher,
-    factory: _MediaMatcher.ɵfac,
+    token: _MutationObserverFactory,
+    factory: _MutationObserverFactory.ɵfac,
     providedIn: "root"
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MediaMatcher, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MutationObserverFactory, [{
     type: Injectable,
     args: [{
       providedIn: "root"
     }]
-  }], () => [], null);
+  }], null, null);
 })();
-function createEmptyStyleRule(query, nonce) {
-  if (mediaQueriesForWebkitCompatibility.has(query)) {
-    return;
-  }
-  try {
-    if (!mediaQueryStyleNode) {
-      mediaQueryStyleNode = document.createElement("style");
-      if (nonce) {
-        mediaQueryStyleNode.setAttribute("nonce", nonce);
-      }
-      mediaQueryStyleNode.setAttribute("type", "text/css");
-      document.head.appendChild(mediaQueryStyleNode);
-    }
-    if (mediaQueryStyleNode.sheet) {
-      mediaQueryStyleNode.sheet.insertRule(`@media ${query} {body{ }}`, 0);
-      mediaQueriesForWebkitCompatibility.add(query);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-function noopMatchMedia(query) {
-  return {
-    matches: query === "all" || query === "",
-    media: query,
-    addListener: () => {
-    },
-    removeListener: () => {
-    }
-  };
-}
-var BreakpointObserver = class _BreakpointObserver {
-  _mediaMatcher = inject(MediaMatcher);
-  _zone = inject(NgZone);
-  _queries = /* @__PURE__ */ new Map();
-  _destroySubject = new Subject();
+var ContentObserver = class _ContentObserver {
+  _mutationObserverFactory = inject(MutationObserverFactory);
+  _observedElements = /* @__PURE__ */ new Map();
+  _ngZone = inject(NgZone);
   constructor() {
   }
   ngOnDestroy() {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    this._observedElements.forEach((_, element) => this._cleanupObserver(element));
   }
-  isMatched(value) {
-    const queries = splitQueries(coerceArray(value));
-    return queries.some((mediaQuery) => this._registerQuery(mediaQuery).mql.matches);
-  }
-  observe(value) {
-    const queries = splitQueries(coerceArray(value));
-    const observables = queries.map((query) => this._registerQuery(query).observable);
-    let stateObservable = combineLatest(observables);
-    stateObservable = concat(stateObservable.pipe(take(1)), stateObservable.pipe(skip(1), debounceTime(0)));
-    return stateObservable.pipe(map((breakpointStates) => {
-      const response = {
-        matches: false,
-        breakpoints: {}
-      };
-      breakpointStates.forEach(({
-        matches,
-        query
-      }) => {
-        response.matches = response.matches || matches;
-        response.breakpoints[query] = matches;
+  observe(elementOrRef) {
+    const element = coerceElement(elementOrRef);
+    return new Observable((observer) => {
+      const stream = this._observeElement(element);
+      const subscription = stream.pipe(map((records) => records.filter((record) => !shouldIgnoreRecord(record))), filter((records) => !!records.length)).subscribe((records) => {
+        this._ngZone.run(() => {
+          observer.next(records);
+        });
       });
-      return response;
-    }));
-  }
-  _registerQuery(query) {
-    if (this._queries.has(query)) {
-      return this._queries.get(query);
-    }
-    const mql = this._mediaMatcher.matchMedia(query);
-    const queryObservable = new Observable((observer) => {
-      const handler = (e) => this._zone.run(() => observer.next(e));
-      mql.addListener(handler);
       return () => {
-        mql.removeListener(handler);
+        subscription.unsubscribe();
+        this._unobserveElement(element);
       };
-    }).pipe(startWith(mql), map(({
-      matches
-    }) => ({
-      query,
-      matches
-    })), takeUntil(this._destroySubject));
-    const output = {
-      observable: queryObservable,
-      mql
-    };
-    this._queries.set(query, output);
-    return output;
+    });
   }
-  static ɵfac = function BreakpointObserver_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _BreakpointObserver)();
+  _observeElement(element) {
+    return this._ngZone.runOutsideAngular(() => {
+      if (!this._observedElements.has(element)) {
+        const stream = new Subject();
+        const observer = this._mutationObserverFactory.create((mutations) => stream.next(mutations));
+        if (observer) {
+          observer.observe(element, {
+            characterData: true,
+            childList: true,
+            subtree: true
+          });
+        }
+        this._observedElements.set(element, {
+          observer,
+          stream,
+          count: 1
+        });
+      } else {
+        this._observedElements.get(element).count++;
+      }
+      return this._observedElements.get(element).stream;
+    });
+  }
+  _unobserveElement(element) {
+    if (this._observedElements.has(element)) {
+      this._observedElements.get(element).count--;
+      if (!this._observedElements.get(element).count) {
+        this._cleanupObserver(element);
+      }
+    }
+  }
+  _cleanupObserver(element) {
+    if (this._observedElements.has(element)) {
+      const {
+        observer,
+        stream
+      } = this._observedElements.get(element);
+      if (observer) {
+        observer.disconnect();
+      }
+      stream.complete();
+      this._observedElements.delete(element);
+    }
+  }
+  static ɵfac = function ContentObserver_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _ContentObserver)();
   };
   static ɵprov = ɵɵdefineInjectable({
-    token: _BreakpointObserver,
-    factory: _BreakpointObserver.ɵfac,
+    token: _ContentObserver,
+    factory: _ContentObserver.ɵfac,
     providedIn: "root"
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(BreakpointObserver, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ContentObserver, [{
     type: Injectable,
     args: [{
       providedIn: "root"
     }]
   }], () => [], null);
 })();
-function splitQueries(queries) {
-  return queries.map((query) => query.split(",")).reduce((a1, a2) => a1.concat(a2)).map((query) => query.trim());
-}
+var CdkObserveContent = class _CdkObserveContent {
+  _contentObserver = inject(ContentObserver);
+  _elementRef = inject(ElementRef);
+  event = new EventEmitter();
+  get disabled() {
+    return this._disabled;
+  }
+  set disabled(value) {
+    this._disabled = value;
+    this._disabled ? this._unsubscribe() : this._subscribe();
+  }
+  _disabled = false;
+  get debounce() {
+    return this._debounce;
+  }
+  set debounce(value) {
+    this._debounce = coerceNumberProperty(value);
+    this._subscribe();
+  }
+  _debounce;
+  _currentSubscription = null;
+  constructor() {
+  }
+  ngAfterContentInit() {
+    if (!this._currentSubscription && !this.disabled) {
+      this._subscribe();
+    }
+  }
+  ngOnDestroy() {
+    this._unsubscribe();
+  }
+  _subscribe() {
+    this._unsubscribe();
+    const stream = this._contentObserver.observe(this._elementRef);
+    this._currentSubscription = (this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream).subscribe(this.event);
+  }
+  _unsubscribe() {
+    this._currentSubscription?.unsubscribe();
+  }
+  static ɵfac = function CdkObserveContent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _CdkObserveContent)();
+  };
+  static ɵdir = ɵɵdefineDirective({
+    type: _CdkObserveContent,
+    selectors: [["", "cdkObserveContent", ""]],
+    inputs: {
+      disabled: [2, "cdkObserveContentDisabled", "disabled", booleanAttribute],
+      debounce: "debounce"
+    },
+    outputs: {
+      event: "cdkObserveContent"
+    },
+    exportAs: ["cdkObserveContent"]
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CdkObserveContent, [{
+    type: Directive,
+    args: [{
+      selector: "[cdkObserveContent]",
+      exportAs: "cdkObserveContent"
+    }]
+  }], () => [], {
+    event: [{
+      type: Output,
+      args: ["cdkObserveContent"]
+    }],
+    disabled: [{
+      type: Input,
+      args: [{
+        alias: "cdkObserveContentDisabled",
+        transform: booleanAttribute
+      }]
+    }],
+    debounce: [{
+      type: Input
+    }]
+  });
+})();
+var ObserversModule = class _ObserversModule {
+  static ɵfac = function ObserversModule_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _ObserversModule)();
+  };
+  static ɵmod = ɵɵdefineNgModule({
+    type: _ObserversModule,
+    imports: [CdkObserveContent],
+    exports: [CdkObserveContent]
+  });
+  static ɵinj = ɵɵdefineInjector({
+    providers: [MutationObserverFactory]
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ObserversModule, [{
+    type: NgModule,
+    args: [{
+      imports: [CdkObserveContent],
+      exports: [CdkObserveContent],
+      providers: [MutationObserverFactory]
+    }]
+  }], null, null);
+})();
 
 // node_modules/@angular/cdk/fesm2022/_a11y-module-chunk.mjs
 var InteractivityChecker = class _InteractivityChecker {
@@ -2004,6 +1807,21 @@ var ActiveDescendantKeyManager = class extends ListKeyManager {
   }
 };
 
+// node_modules/@angular/cdk/fesm2022/_focus-key-manager-chunk.mjs
+var FocusKeyManager = class extends ListKeyManager {
+  _origin = "program";
+  setFocusOrigin(origin) {
+    this._origin = origin;
+    return this;
+  }
+  setActiveItem(item) {
+    super.setActiveItem(item);
+    if (this.activeItem) {
+      this.activeItem.focus(this._origin);
+    }
+  }
+};
+
 // node_modules/@angular/cdk/fesm2022/coercion-private.mjs
 function coerceObservable(data) {
   if (!isObservable(data)) {
@@ -2599,83 +2417,10 @@ var ConfigurableFocusTrapFactory = class _ConfigurableFocusTrapFactory {
   }], () => [], null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/_test-environment-chunk.mjs
-function _isTestEnvironment() {
-  return typeof __karma__ !== "undefined" && !!__karma__ || typeof jasmine !== "undefined" && !!jasmine || typeof jest !== "undefined" && !!jest || typeof Mocha !== "undefined" && !!Mocha;
-}
-
-// node_modules/@angular/cdk/fesm2022/platform.mjs
-var PlatformModule = class _PlatformModule {
-  static ɵfac = function PlatformModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _PlatformModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _PlatformModule
-  });
-  static ɵinj = ɵɵdefineInjector({});
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(PlatformModule, [{
-    type: NgModule,
-    args: [{}]
-  }], null, null);
-})();
-var supportedInputTypes;
-var candidateInputTypes = ["color", "button", "checkbox", "date", "datetime-local", "email", "file", "hidden", "image", "month", "number", "password", "radio", "range", "reset", "search", "submit", "tel", "text", "time", "url", "week"];
-function getSupportedInputTypes() {
-  if (supportedInputTypes) {
-    return supportedInputTypes;
-  }
-  if (typeof document !== "object" || !document) {
-    supportedInputTypes = new Set(candidateInputTypes);
-    return supportedInputTypes;
-  }
-  let featureTestInput = document.createElement("input");
-  supportedInputTypes = new Set(candidateInputTypes.filter((value) => {
-    featureTestInput.setAttribute("type", value);
-    return featureTestInput.type === value;
-  }));
-  return supportedInputTypes;
-}
-
-// node_modules/@angular/cdk/fesm2022/layout.mjs
-var LayoutModule = class _LayoutModule {
-  static ɵfac = function LayoutModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _LayoutModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _LayoutModule
-  });
-  static ɵinj = ɵɵdefineInjector({});
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(LayoutModule, [{
-    type: NgModule,
-    args: [{}]
-  }], null, null);
-})();
-
-// node_modules/@angular/material/fesm2022/_animation-chunk.mjs
-var MATERIAL_ANIMATIONS = new InjectionToken("MATERIAL_ANIMATIONS");
-var reducedMotion = null;
-function _getAnimationsState() {
-  if (inject(MATERIAL_ANIMATIONS, {
-    optional: true
-  })?.animationsDisabled || inject(ANIMATION_MODULE_TYPE, {
-    optional: true
-  }) === "NoopAnimations") {
-    return "di-disabled";
-  }
-  reducedMotion ??= inject(MediaMatcher).matchMedia("(prefers-reduced-motion)").matches;
-  return reducedMotion ? "reduced-motion" : "enabled";
-}
-function _animationsDisabled() {
-  return _getAnimationsState() !== "enabled";
-}
-
 export {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
+  TAB,
   ENTER,
   ESCAPE,
   SPACE,
@@ -2684,18 +2429,17 @@ export {
   RIGHT_ARROW,
   DOWN_ARROW,
   A,
-  _getEventTarget,
-  normalizePassiveListenerOptions,
   FocusMonitor,
   ObserversModule,
+  InteractivityChecker,
   LiveAnnouncer,
+  A11yModule,
   _IdGenerator,
   hasModifierKey,
   ActiveDescendantKeyManager,
+  FocusKeyManager,
   addAriaReferencedId,
   removeAriaReferencedId,
-  _isTestEnvironment,
-  getSupportedInputTypes,
-  _animationsDisabled
+  AriaDescriber
 };
-//# sourceMappingURL=chunk-46VNLTR7.js.map
+//# sourceMappingURL=chunk-INIQP2ZR.js.map

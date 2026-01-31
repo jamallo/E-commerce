@@ -1,28 +1,69 @@
+
 @use '@angular/material' as mat;
-@use './styles/theme/theme-colors' as theme;
 
-/* 1️⃣ Inicializa Material */
-@include mat.core();
-
-/* 2️⃣ Define el theme M3 correctamente */
-$jamallo-theme: mat.define-theme((
-  color: (
-    primary: theme.$primary-palette,
-    tertiary: theme.$tertiary-palette,
-  )
-));
-
-/* 3️⃣ Aplica el theme */
-@include mat.all-component-themes($jamallo-theme);
-
-/* 4️⃣ Estilos base */
-html, body {
-  height: 100%;
+:root {
+  --verde: #1b5e20;
+  --verde-suave: #e6f2e8;
+  --oro: #c9a227;
+  --oro-suave: #f6edc9;
+  --fondo: #ffffff;
+  --fondo-suave: #f7f7f4;
+  --texto: #1a1a1a;
+  --texto-mudo: #5f6368;
+  --borde: #e0e0e0;
+  --correcto: #2e7d32;
+  --error: #c62828;
+  --navbar-height: 74px;
+  --navbar-height-mobile: 64px;
 }
+
+@include mat.core();
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: var(--md-sys-color-background);
-  color: var(--md-sys-color-on-background);
+  font-family: Roboto, sans-serif;
+  background-color: var(--fondo-suave);
 }
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  -ms-font-feature-settings: 'liga';
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  @supports (-moz-appearance:none) {
+    font-feature-settings: normal;
+  }
+
+  @supports (-webkit-hyphens:none) {
+    -webkit-font-feature-settings: 'liga' 1;
+    font-feature-settings: 'liga' 1;
+  }
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+
+.material-icons.verde { color: var(--verde); }
+.material-icons.oro { color: var(--oro); }
+.material-icons.error { color: var(--error); }
+.material-icons.correcto { color: var(--correcto); }
