@@ -5,13 +5,13 @@ import {
   MatLabel,
   MatPrefix,
   MatSuffix
-} from "./chunk-6OCNE5UJ.js";
+} from "./chunk-KGUBX5DY.js";
 import {
   ObserversModule
-} from "./chunk-INIQP2ZR.js";
+} from "./chunk-SDLQU3XR.js";
 import {
   BidiModule
-} from "./chunk-KAEUXLSX.js";
+} from "./chunk-XSECCQVS.js";
 import {
   Injectable,
   NgModule,
@@ -19,7 +19,7 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-} from "./chunk-PLX4VCLI.js";
+} from "./chunk-R4TDNRVN.js";
 
 // node_modules/@angular/material/fesm2022/_error-options-chunk.mjs
 var ShowOnDirtyErrorStateMatcher = class _ShowOnDirtyErrorStateMatcher {
@@ -119,4 +119,4 @@ export {
   _ErrorStateTracker,
   MatFormFieldModule
 };
-//# sourceMappingURL=chunk-HZMBGSRZ.js.map
+//# sourceMappingURL=chunk-V5HIPG56.js.map

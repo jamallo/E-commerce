@@ -79,6 +79,11 @@ button {
   border-radius: 999px;
 }
 
+button[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .btn-pago {
   display: flex;
   align-items: center;
@@ -94,6 +99,16 @@ button {
     font-size: 14px;
     font-weight: 500;
   }
+}
+
+.spinner-pago {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn-pago[disabled] {
+  opacity: 0.8;
 }
 
 /* ===========================
@@ -155,19 +170,27 @@ button {
       }
 
       .precio {
-        font-size: 24px;
+        font-size: 14px;
+        font-weight: 600;
         color: var(--texto-mudo);
       }
     }
 
     .acciones {
+      display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+
+      button {
+        width: 36px;
+        height: 36px;
+      }
 
       .cantidad {
         min-width: 24px;
         text-align: center;
         font-weight: 600;
+        font-size: 14px;
       }
 
       mat-icon {
@@ -194,6 +217,8 @@ button {
       color: var(--oro);
     }
   }
+
+
 
   /* ===========================
      PAGO
@@ -343,3 +368,43 @@ button {
   }
 
 }
+
+/*========================
+  ANIMACIÓN PRECIO TOTAL
+=========================*/
+
+.precio.animar {
+    animation: pulso-precio 500ms ease-out;
+  }
+
+  @keyframes pulso-precio {
+    0% {
+      transform: scale(1);
+      color: var(--verde);
+    }
+
+    50% {
+      transform: scale(1.12);
+      color: var(--oro);
+    }
+
+    100% {
+      transform: scale(1);
+      color: var(--verde);
+    }
+  }
+
+  .snack-ok {
+    background: var(--verde);
+    color: white;
+  }
+
+  .snack-warn {
+    background: var(--oro);
+    color: #2a2a2a;
+  }
+
+  .snack-error {
+    background: #c62828;
+    color: white;
+  }

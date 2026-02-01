@@ -1,41 +1,41 @@
 import {
   _isTestEnvironment
-} from "./chunk-352OTLYI.js";
-import {
-  coerceCssPixelValue
-} from "./chunk-42QFQP6S.js";
-import {
-  ScrollDispatcher,
-  ScrollingModule,
-  ViewportRuler
-} from "./chunk-6SAQUDT4.js";
-import {
-  supportsScrollBehavior
-} from "./chunk-GUGIMSVJ.js";
+} from "./chunk-TIPELOI6.js";
 import {
   ESCAPE,
   _IdGenerator,
   hasModifierKey
-} from "./chunk-INIQP2ZR.js";
+} from "./chunk-SDLQU3XR.js";
 import {
   _getEventTarget
 } from "./chunk-XA6252L2.js";
+import {
+  coerceCssPixelValue
+} from "./chunk-42QFQP6S.js";
 import {
   coerceArray
 } from "./chunk-N4DOILP3.js";
 import {
   _CdkPrivateStyleLoader
-} from "./chunk-7JCNPPTE.js";
+} from "./chunk-BBW6GZK3.js";
 import {
-  Platform
-} from "./chunk-TKQMFQZX.js";
+  ScrollDispatcher,
+  ScrollingModule,
+  ViewportRuler
+} from "./chunk-EJ2BK62J.js";
 import {
-  Location
-} from "./chunk-CAPQRT6I.js";
+  supportsScrollBehavior
+} from "./chunk-GUGIMSVJ.js";
 import {
   BidiModule,
   Directionality
-} from "./chunk-KAEUXLSX.js";
+} from "./chunk-XSECCQVS.js";
+import {
+  Platform
+} from "./chunk-AYM67EFK.js";
+import {
+  Location
+} from "./chunk-LFE7AVLC.js";
 import {
   ANIMATION_MODULE_TYPE,
   ApplicationRef,
@@ -72,13 +72,13 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory
-} from "./chunk-PLX4VCLI.js";
+} from "./chunk-R4TDNRVN.js";
 import {
   Subject,
   Subscription,
   filter,
   takeWhile
-} from "./chunk-RSS3ODKE.js";
+} from "./chunk-Y72XGDAT.js";
 import {
   __spreadProps,
   __spreadValues
@@ -3034,15 +3034,20 @@ var FullscreenOverlayContainer = class _FullscreenOverlayContainer extends Overl
 })();
 
 export {
+  ComponentPortal,
   TemplatePortal,
+  BasePortalOutlet,
   DomPortalOutlet,
+  CdkPortalOutlet,
+  PortalModule,
   createRepositionScrollStrategy,
   OverlayConfig,
   createFlexibleConnectedPositionStrategy,
+  createGlobalPositionStrategy,
   OVERLAY_DEFAULT_CONFIG,
   createOverlayRef,
   CdkOverlayOrigin,
   CdkConnectedOverlay,
   OverlayModule
 };
-//# sourceMappingURL=chunk-TDAJQTES.js.map
+//# sourceMappingURL=chunk-ADW4QJYW.js.map

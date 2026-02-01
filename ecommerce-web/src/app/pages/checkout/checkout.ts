@@ -20,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule} from '@angular/material/divider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 
 
 type CheckoutStep = 'direccion' | 'confirmacion';
@@ -40,7 +41,8 @@ type CheckoutStep = 'direccion' | 'confirmacion';
     MatDividerModule,
     MatFormField,
     MatAutocompleteModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
@@ -69,6 +71,7 @@ export class CheckoutComponent implements OnInit {
 
   items: BasketItem[] = [];
   total = 0;
+  animarTotal = false;
 
   formularioEnvio!: FormGroup;
   cargando = false;
@@ -82,6 +85,8 @@ export class CheckoutComponent implements OnInit {
   elements!: StripeElements;
   cardElement: any;
 
+
+
   constructor(
     private backetService: BasketService,
     private fb: FormBuilder,
@@ -90,7 +95,8 @@ export class CheckoutComponent implements OnInit {
     private pagoService: PagoService,
     private router: Router,
     private spinner: SpinnerService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -347,30 +353,64 @@ export class CheckoutComponent implements OnInit {
   }
 
   incrementar(item: BasketItem) {
+    if (this.cargando) return;
     this.backetService.add(item.product);
     this.actualizarTotal();
+    this.mostrarSnack(`Añadido ${item.product.nombre}`);
   }
 
   decrementar(item: BasketItem) {
+    if (this.cargando) return;
     if (item.quantity > 1) {
       this.backetService.decrease(item.product.id);
+      this.mostrarSnack(`Reducida la cantidad de ${item.product.nombre}`, 'warn');
     } else {
       this.backetService.remove(item.product.id);
+      this.mostrarSnack(`${item.product.nombre} eliminado`, 'error');
     }
     this.actualizarTotal();
   }
 
   eliminar(item: BasketItem) {
+    if (this.cargando) return;
     this.backetService.remove(item.product.id);
     this.actualizarTotal();
+    this.mostrarSnack(`${item.product.nombre} eliminado del pedido`, 'error');
   }
 
+  private ultimoTotal = 0;
   private actualizarTotal() {
-    this.total = this.backetService.getTotal();
+    const nuevoTotal = this.backetService.getTotal();
+
+    if (nuevoTotal === 0 && this.total !== 0) {
+      this.mostrarSnack('La cesta está vacía', 'warn');
+    }
+    if (nuevoTotal !== this.ultimoTotal) {
+      this.animarTotal = true;
+
+      setTimeout(() => {
+        this.animarTotal = false;
+      }, 500);
+    }
+
+    this.total = nuevoTotal;
+    this.ultimoTotal = nuevoTotal;
   }
 
   get cestaVacia(): boolean {
     return this.items.length === 0;
+  }
+
+  private mostrarSnack(
+    mensaje: string,
+    tipo: 'ok' | 'warn' | 'error' = 'ok'
+  ) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: [`snack-${tipo}`]
+    });
   }
 }
 
