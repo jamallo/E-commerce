@@ -1,6 +1,6 @@
 import "./chunk-TIPELOI6.js";
-import "./chunk-XA6252L2.js";
 import "./chunk-GUGIMSVJ.js";
+import "./chunk-XA6252L2.js";
 import {
   BidiModule
 } from "./chunk-XSECCQVS.js";

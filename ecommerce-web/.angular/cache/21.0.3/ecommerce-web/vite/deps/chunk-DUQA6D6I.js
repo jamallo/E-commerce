@@ -1,7 +1,7 @@
 import {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader
-} from "./chunk-SDLQU3XR.js";
+} from "./chunk-HFNRD7XW.js";
 import {
   _animationsDisabled
 } from "./chunk-Q44XZVUR.js";
@@ -562,4 +562,4 @@ export {
   MatRipple,
   _StructuralStylesLoader
 };
-//# sourceMappingURL=chunk-DCAHM6QB.js.map
+//# sourceMappingURL=chunk-DUQA6D6I.js.map

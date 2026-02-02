@@ -3,13 +3,16 @@ import { Component, OnInit } from '@angular/core';
 //import { RouterLink } from '@angular/router';
 import { BasketService } from '../../basket/basket';
 import { MiniCestaComponent } from '../../mini-cesta/mini-cesta.component/mini-cesta.component';
+import { MatButtonModule } from "@angular/material/button";
+import { MatBadge, MatBadgeModule } from "@angular/material/badge";
+import { MatIcon, MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-cesta-flotante',
   standalone: true,
-  imports: [CommonModule, MiniCestaComponent], //RouterLink,
+  imports: [CommonModule, MiniCestaComponent, MatButtonModule, MatBadgeModule, MatIconModule], //RouterLink,
   templateUrl: './cesta-flotante.component.html',
-  styleUrl: './cesta-flotante.component.css',
+  styleUrl: './cesta-flotante.component.scss',
 })
 export class CestaFlotanteComponent implements OnInit {
 

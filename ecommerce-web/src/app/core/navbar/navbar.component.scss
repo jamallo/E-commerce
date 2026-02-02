@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-.navbar-toolbar {
+:host ::ng-deep .navbar-toolbar {
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -17,7 +17,7 @@
 }
 
 // Sección de marca
-.brand-section {
+:host ::ng-deep .brand-section {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -51,7 +51,7 @@
 }
 
 // Navegación
-.nav-links {
+:host ::ng-deep .nav-links {
   display: flex;
   gap: 8px;
   margin-right: 24px;
@@ -75,7 +75,7 @@
       color: var(--texto);
 
       &:hover {
-        background-color: #d4b748;
+        background-color: var(--oro);
       }
     }
 
@@ -89,7 +89,7 @@
 }
 
 // Iconos de acción
-.action-icons {
+:host ::ng-deep .action-icons {
   display: flex;
   align-items: center;
   gap: 16px;

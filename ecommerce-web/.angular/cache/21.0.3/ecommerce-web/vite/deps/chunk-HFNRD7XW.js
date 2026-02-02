@@ -1,8 +1,4 @@
 import {
-  _VisuallyHiddenLoader,
-  _setInnerHtml
-} from "./chunk-K6XGGV6G.js";
-import {
   BreakpointObserver
 } from "./chunk-Q44XZVUR.js";
 import {
@@ -11,6 +7,10 @@ import {
   _getShadowRoot,
   normalizePassiveListenerOptions
 } from "./chunk-XA6252L2.js";
+import {
+  _VisuallyHiddenLoader,
+  _setInnerHtml
+} from "./chunk-K6XGGV6G.js";
 import {
   DomSanitizer
 } from "./chunk-MB6UF3VG.js";
@@ -2442,4 +2442,4 @@ export {
   removeAriaReferencedId,
   AriaDescriber
 };
-//# sourceMappingURL=chunk-SDLQU3XR.js.map
+//# sourceMappingURL=chunk-HFNRD7XW.js.map
