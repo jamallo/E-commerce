@@ -1,7 +1,8 @@
 <mat-toolbar class="navbar-toolbar" color="primary">
   <!-- Logo/Brand -->
   <div class="brand-section" routerLink="/productos">
-    <mat-icon class="brand-icon">storefront</mat-icon>
+    <!-- <img src="assets/logo.svg" class="brand-logo" /> -->
+    <mat-icon class="brand-icon">workspace_premium</mat-icon>
     <span class="brand-text">Jamallo</span>
   </div>
 
@@ -35,7 +36,6 @@
       <button mat-icon-button [matBadge]="totalCesta"
               [matBadgeHidden]="totalCesta === 0"
               matBadgeColor="warn"
-              matBadgeSize="small"
               routerLink="/cesta"
               class="cart-button">
         <mat-icon>shopping_cart</mat-icon>

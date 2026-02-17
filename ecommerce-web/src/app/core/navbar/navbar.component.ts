@@ -49,7 +49,7 @@ export class NavbarComponent implements OnInit, OnDestroy{
         0
       );
     });
-    const userEmail = this.authService.getEmail();
+    this.userEmail = this.authService.getEmail() ?? '';
   }
 
   ngOnDestroy(): void {
@@ -63,10 +63,9 @@ export class NavbarComponent implements OnInit, OnDestroy{
   }
 
   getUserInitials(): string {
-    if (this.userEmail) {
-      return this.userEmail.charAt(0).toUpperCase();
-    }
-    return 'U';
+    return this.userEmail
+    ? this.userEmail.charAt(0).toUpperCase()
+    : 'U';
   }
 
   logout(): void {

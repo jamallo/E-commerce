@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Output, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+//import { RouterLink } from '@angular/router';
 import { BasketItem } from '../../basket/basket.model';
 import { BasketService } from '../../basket/basket';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-mini-cesta',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './mini-cesta.component.html',
   styleUrl: './mini-cesta.component.scss',
 })

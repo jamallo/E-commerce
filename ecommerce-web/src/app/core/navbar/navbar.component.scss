@@ -5,10 +5,12 @@
   top: 0;
   z-index: 1000;
   padding: 0 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  //box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: var(--navbar-height);
-  background: linear-gradient(135deg, var(--verde) 0%, #2e7d32 100%) !important;
   color: var(--oro) !important;
+  background: linear-gradient(270deg, #1b5e20, #2e7d32, #1b5e20, #145a32);
+  background-size: 600% 600%;
+  animation: gradientMove 12s ease infinite;
 
   @media (max-width: 768px) {
     padding: 0 16px;
@@ -36,6 +38,11 @@
     height: 28px;
     color: var(--oro);
   }
+
+  /* .brand-logo {
+    height: 32px;
+    width: auto;
+  } */
 
   .brand-text {
     font-size: 1.5rem;
@@ -95,9 +102,11 @@
   gap: 16px;
 
 
+
   .cart-button {
     position: relative;
     transition: transform 0.3s ease;
+    font-size: 14px;
 
 
     &:hover {
@@ -113,6 +122,11 @@
   }
 
   .user-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+
     .user-avatar {
       width: 36px;
       height: 36px;
@@ -122,6 +136,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      line-height: 1;
       font-weight: 600;
       font-size: 16px;
       border: 2px solid rgba(255, 255, 255, 0.3);
@@ -212,5 +227,36 @@
 
   .action-icons {
     gap: 12px;
+  }
+}
+
+:host ::ng-deep .mat-badge-content {
+  background: var(--oro) !important;
+  color: var(--texto) !important;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+:host ::ng-deep .mat-mdc-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .navbar-toolbar:hover {
+  box-shadow: 0 4px 20px rgba(201, 162, 39, 0.2);
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
