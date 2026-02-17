@@ -1,4 +1,4 @@
-🛒 Jamallo – Full-Stack E-Commerce
+#🛒 Jamallo – Full-Stack E-Commerce
 
 E-Commerce web application desarrollada con Angular (frontend) y Spring Boot (backend).  
 Proyecto completo orientado a buenas prácticas, experiencia de usuario y arquitectura real en producción.  
@@ -7,7 +7,7 @@ Proyecto completo orientado a buenas prácticas, experiencia de usuario y arquit
 
 --------------------------------------------------  
 
-🚀 Descripción
+##🚀 Descripción
 
 Jamallo es una plataforma de comercio electrónico con funcionalidades completas:  
 
@@ -21,9 +21,9 @@ Jamallo es una plataforma de comercio electrónico con funcionalidades completas
 
 --------------------------------------------------
 
-🧱 Arquitectura del proyecto  
+##🧱 Arquitectura del proyecto  
 
-📂 El repositorio está dividido en dos partes principales:  
+###📂 El repositorio está dividido en dos partes principales:  
 
 E-commerce/  
 ├── ecommerce-web/          ← Frontend Angular  
@@ -32,9 +32,9 @@ E-commerce/
 
 --------------------------------------------------  
 
-🧪 Tech Stack  
+##🧪 Tech Stack  
 
-🔁 Frontend  
+###🔁 Frontend  
 
 Angular 17  
 Angular Material (UI + animaciones)  
@@ -42,7 +42,7 @@ RxJS / Reactive Forms
 SCSS con temas personalizados (verde & oro)  
 Stripe para pago (estructura lista para integrar)  
 
-🛠 Backend  
+###🛠 Backend  
 
 Java 25  
 Spring Boot 4.0  
@@ -59,9 +59,9 @@ endpoints protegidos por roles
 
 --------------------------------------------------  
 
-✨ Características destacadas  
+##✨ Características destacadas  
 
-🧑‍💻 Frontend Angular  
+###🧑‍💻 Frontend Angular  
 
 ✔ Diseño responsive y moderno  
 ✔ Estado global del carrito reactivo  
@@ -69,7 +69,7 @@ endpoints protegidos por roles
 ✔ Resumen de compra en tiempo real  
 ✔ Componentes standalone Angular 17  
 
-🔐 Autenticación & Roles  
+###🔐 Autenticación & Roles  
 
 ✔ Login / Logout  
 ✔ Gestión de roles (usuario y admin)  
@@ -77,7 +77,7 @@ endpoints protegidos por roles
 
 --------------------------------------------------  
 
-🛍️ Flujo de usuario  
+##🛍️ Flujo de usuario  
 
 1 - El usuario navega catálogo de productos  
 2 - Añade productos al carrito  
@@ -89,7 +89,7 @@ endpoints protegidos por roles
 
 --------------------------------------------------  
 
-🧠 Diseño UI  
+##🧠 Diseño UI  
 
 El frontend destaca por:  
 
@@ -101,9 +101,9 @@ El frontend destaca por:
 
 --------------------------------------------------  
 
-📊 Visión técnica  
+##📊 Visión técnica  
 
-🛠 Backend — Arquitectura REST  
+###🛠 Backend — Arquitectura REST  
 
 El backend expone API RESTful seguras usando Spring Security + JWT. Ejemplos:  
 POST /auth/login  
@@ -116,7 +116,7 @@ Esto facilita la mantenibilidad y pruebas unitarias.
 
 --------------------------------------------------  
 
-🧩 Buenas prácticas incluidas  
+##🧩 Buenas prácticas incluidas  
 
 ✔ Separación de responsabilidades  
 ✔ Angular Standalone Components  
