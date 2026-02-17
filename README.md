@@ -3,8 +3,6 @@
 E-Commerce web application desarrollada con Angular (frontend) y Spring Boot (backend).  
 Proyecto completo orientado a buenas prácticas, experiencia de usuario y arquitectura real en producción.  
 
-📌 Código: https://github.com/jamallo/E-commerce
-
 --------------------------------------------------  
 
 ## 🚀 Descripción
@@ -19,7 +17,7 @@ Jamallo es una plataforma de comercio electrónico con funcionalidades completas
 ✔ APIs REST seguras  
 ✔ Integración frontend ↔ backend  
 
---------------------------------------------------
+--------------------------------------------------  
 
 ## 🧱 Arquitectura del proyecto  
 
