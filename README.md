@@ -7,9 +7,9 @@ Proyecto completo orientado a buenas prácticas, experiencia de usuario y arquit
 
 ## 👨‍💻 Autor  
 
-### Alba Prado Fernández
-Full-Stack Developer
-✨ https://github.com/jamallo
+### Alba Prado Fernández  
+Full-Stack Developer  
+✨ https://github.com/jamallo  
 
 --------------------------------------------------  
 
