@@ -1,7 +1,7 @@
 export interface Producto {
   id: number;
-  nombre: String;
-  descripcion: String;
+  nombre: string;
+  descripcion: string;
   precio: number;
   activo: boolean;
   imagenUrl?: string;

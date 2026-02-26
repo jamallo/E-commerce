@@ -1,4 +1,249 @@
+<!-- Header con título y acciones -->
+<div class="list-header">
+  <div class="list-header__title">
+    <h2>Productos</h2>
+    <div class="list-header__actions">
+      <!-- Botón nuevo para desktop -->
+      <button
+        *appHasRole="['ADMIN']"
+        class="btn-primary"
+        [routerLink]="['/productos/nuevo']">
+        Nuevo producto
+      </button>
+    </div>
+  </div>
+</div>
 
+<!-- Panel de filtros colapsable -->
+<div class="filtros-panel">
+  <div class="filtros-panel__header" (click)="filtrosCollapsed = !filtrosCollapsed">
+    <h3>
+      <span class="material-icons">filter_list</span>
+      Filtros y ordenación
+    </h3>
+    <span class="material-icons filter-toggle" [class.active]="!filtrosCollapsed">
+      expand_more
+    </span>
+  </div>
+
+  <div class="filtros-panel__content" [class.visible]="!filtrosCollapsed">
+    <div class="filtros-grid">
+      <!-- Nombre -->
+      <div class="filtro-item">
+        <label>Nombre</label>
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          [(ngModel)]="filtros.nombre"
+          (ngModelChange)="onFiltroChange()" />
+      </div>
+
+      <!-- Estado -->
+      <div class="filtro-item">
+        <label>Estado</label>
+        <select
+          [(ngModel)]="filtros.activo"
+          (ngModelChange)="onFiltroChange()">
+          <option [ngValue]="undefined">Todos</option>
+          <option [ngValue]="true">Activos</option>
+          <option [ngValue]="false">Inactivos</option>
+        </select>
+      </div>
+
+      <!-- Precio mínimo -->
+      <div class="filtro-item">
+        <label>Precio mínimo</label>
+        <input
+          type="number"
+          placeholder="0.00 €"
+          [(ngModel)]="filtros.precioMin"
+          (ngModelChange)="onFiltroChange()"
+          min="0"
+          step="0.01" />
+      </div>
+
+      <!-- Precio máximo -->
+      <div class="filtro-item">
+        <label>Precio máximo</label>
+        <input
+          type="number"
+          placeholder="9999.99 €"
+          [(ngModel)]="filtros.precioMax"
+          (ngModelChange)="onFiltroChange()"
+          min="0"
+          step="0.01" />
+      </div>
+
+      <!-- Ordenar por -->
+      <div class="filtro-item">
+        <label>Ordenar por</label>
+        <select [(ngModel)]="sortBy" (change)="onFiltroChange()">
+          <option value="id">ID</option>
+          <option value="nombre">Nombre</option>
+          <option value="precio">Precio</option>
+        </select>
+      </div>
+
+      <!-- Dirección -->
+      <div class="filtro-item">
+        <label>Dirección</label>
+        <select [(ngModel)]="direccion" (change)="onFiltroChange()">
+          <option value="ASC">Ascendente</option>
+          <option value="DESC">Descendente</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Acciones de filtros -->
+    <div class="filtros-actions">
+      <button class="btn-limpiar" (click)="limpiarFiltros()">
+        Limpiar filtros
+      </button>
+      <button class="btn-aplicar" (click)="aplicarFiltros()">
+        Aplicar filtros
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Badges de filtros activos -->
+@if (filtros.nombre || filtros.activo !== undefined || filtros.precioMin || filtros.precioMax) {
+  <div class="filtros-activos">
+    <div class="badges-container">
+      @if (filtros.nombre) {
+        <span class="badge">
+          {{filtros.nombre}}
+          <span class="material-icons" (click)="filtros.nombre = ''; onFiltroChange()">close</span>
+        </span>
+      }
+      @if (filtros.activo !== undefined) {
+        <span class="badge">
+          {{filtros.activo ? 'Activos' : 'Inactivos'}}
+          <span class="material-icons" (click)="filtros.activo = undefined; onFiltroChange()">close</span>
+        </span>
+      }
+      @if (filtros.precioMin) {
+        <span class="badge">
+          Mín: {{filtros.precioMin}}€
+          <span class="material-icons" (click)="filtros.precioMin = undefined; onFiltroChange()">close</span>
+        </span>
+      }
+      @if (filtros.precioMax) {
+        <span class="badge">
+          Máx: {{filtros.precioMax}}€
+          <span class="material-icons" (click)="filtros.precioMax = undefined; onFiltroChange()">close</span>
+        </span>
+      }
+    </div>
+  </div>
+}
+
+<!-- Vista para móvil: Cards -->
+<div class="mobile-view" *appHasRole="['USER']">
+  @if (productos.length === 0 && !cargando) {
+    <div class="empty-state">
+      <span class="material-icons">inventory_2</span>
+      <p>No hay productos disponibles</p>
+      <button *appHasRole="['ADMIN']" class="btn-primary" [routerLink]="['/productos/nuevo']">
+        Crear primer producto
+      </button>
+    </div>
+  } @else {
+    <div class="feed">
+      @for (producto of productos; track producto.id) {
+        <app-tarjeta-producto
+          [producto]="producto"
+          (eliminar)="pedirConfirmacion(producto.id)" />
+      }
+    </div>
+  }
+</div>
+
+<!-- Vista para desktop: Tabla (solo admin) -->
+<div class="desktop-view" *appHasRole="['ADMIN']">
+  @if (productos.length === 0 && !cargando) {
+    <div class="empty-state">
+      <span class="material-icons">inventory_2</span>
+      <p>No hay productos disponibles</p>
+      <button class="btn-primary" [routerLink]="['/productos/nuevo']">
+        Crear primer producto
+      </button>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (producto of productos; track producto.id) {
+            <tr>
+              <td>{{ producto.nombre }}</td>
+              <td>{{ producto.descripcion | truncate:50 }}</td>
+              <td>{{ producto.precio | currency:'EUR' }}</td>
+              <td>
+                <span class="activo-badge" [class.activo-true]="producto.activo" [class.activo-false]="!producto.activo">
+                  {{ producto.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                @if (producto.imagenUrl) {
+                  <img [src]="producto.imagenUrl" alt="producto" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                } @else {
+                  <span class="material-icons" style="color: var(--texto-mudo);">image_not_supported</span>
+                }
+              </td>
+              <td>
+                <div class="acciones">
+                  <button class="btn-icon edit" [routerLink]="['/productos/editar', producto.id]">
+                    <span class="material-icons">edit</span>
+                  </button>
+                  <button class="btn-icon delete" (click)="pedirConfirmacion(producto.id)">
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Información de paginación -->
+@if (totalPaginas > 1) {
+  <div class="paginacion-info">
+    Página {{ paginaActual + 1 }} de {{ totalPaginas }}
+  </div>
+}
+
+<!-- Trigger para scroll infinito -->
+<div #sentinelaScroll class="infinite-scroll-trigger"></div>
+
+<!-- Loader -->
+@if (cargando) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+  </div>
+}
+
+<!-- Botón flotante para nuevo producto (mobile) -->
+<button
+  *appHasRole="['ADMIN']"
+  class="fab-button"
+  [routerLink]="['/productos/nuevo']">
+  <span class="material-icons">add</span>
+</button>
+
+<!--
 <h2>Listado de productos</h2>
 
 
@@ -214,3 +459,4 @@ Nuevo producto
 <ng-template #vacioTpl>
   <p>No hay productos disponibles</p>
 </ng-template> -->
+

@@ -11,14 +11,15 @@ import { ConfirmService } from "../../ui/confirm-modal/confirm";
 import { HasRoleDirective } from "../../directives/has-role";
 import { TarjetaProductoComponent } from "../tarjeta-producto/tarjeta-producto";
 import { Subject, debounceTime } from "rxjs";
+import { TruncatePipe } from "./truncate.pipe";
 
 
 @Component({
   selector: 'app-producto-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, TarjetaProductoComponent],
+  imports: [CommonModule, FormsModule, RouterLink, HasRoleDirective, TarjetaProductoComponent, TruncatePipe],
   templateUrl: './producto-list.component.html',
-  styleUrls: ['./producto-list.component.css']
+  styleUrls: ['./producto-list.component.scss']
 })
 
 export class ProductoListComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -50,6 +51,7 @@ export class ProductoListComponent implements OnInit, AfterViewInit, OnDestroy {
   sortBy = "id";
   direccion = 'ASC';
   hayMasProductos = true;
+  filtrosCollapsed = true;
 
   /* productoAEliminar ?: number | null = null;
   mostrarConfirmacion = false;
