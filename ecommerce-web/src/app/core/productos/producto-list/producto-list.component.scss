@@ -258,6 +258,7 @@ $breakpoint-xl: 1200px;
 
   input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
