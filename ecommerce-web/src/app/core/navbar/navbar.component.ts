@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, Renderer2 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../auth/auth.service";
@@ -28,18 +28,21 @@ import { MatDividerModule } from '@angular/material/divider';
     MatDividerModule
   ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit, OnDestroy{
-
+export class NavbarComponent implements OnInit, OnDestroy {
   totalCesta = 0;
   userEmail: string = '';
+  navbarHidden = false;
+  private lastScrollTop = 0;
   private backetSubscription!: Subscription;
+  private scrollListener!: () => void;
 
   constructor(
     private authService: AuthService,
     private basketService: BasketService,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -50,12 +53,40 @@ export class NavbarComponent implements OnInit, OnDestroy{
       );
     });
     this.userEmail = this.authService.getEmail() ?? '';
+
+    // Añadir listener de scroll con Renderer2
+    this.scrollListener = this.renderer.listen('window', 'scroll', () => {
+      this.onWindowScroll();
+    });
   }
 
   ngOnDestroy(): void {
     if (this.backetSubscription) {
       this.backetSubscription.unsubscribe();
     }
+    // Eliminar listener cuando el componente se destruye
+    if (this.scrollListener) {
+      this.scrollListener();
+    }
+  }
+
+  onWindowScroll(): void {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Ocultar navbar cuando se hace scroll hacia abajo y mostrar hacia arriba
+    if (scrollTop > this.lastScrollTop && scrollTop > 100) {
+      if (!this.navbarHidden) {
+        this.navbarHidden = true;
+        this.renderer.addClass(document.body, 'navbar-hidden');
+      }
+    } else {
+      if (this.navbarHidden) {
+        this.navbarHidden = false;
+        this.renderer.removeClass(document.body, 'navbar-hidden');
+      }
+    }
+
+    this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   }
 
   get isLogged(): boolean {
@@ -64,8 +95,8 @@ export class NavbarComponent implements OnInit, OnDestroy{
 
   getUserInitials(): string {
     return this.userEmail
-    ? this.userEmail.charAt(0).toUpperCase()
-    : 'U';
+      ? this.userEmail.charAt(0).toUpperCase()
+      : 'U';
   }
 
   logout(): void {
@@ -73,26 +104,23 @@ export class NavbarComponent implements OnInit, OnDestroy{
     this.router.navigate(['/login']);
   }
 
-  goLogin() {
+  goLogin(): void {
     this.router.navigate(['/login']);
   }
 
-  goPrueba() {
+  goPrueba(): void {
     this.router.navigate(['/prueba']);
   }
-
 
   goAdmin(): void {
     this.router.navigate(['/admin']);
   }
 
-   isAdmin(): boolean {
+  isAdmin(): boolean {
     return this.authService.isAdmin();
   }
 
-  // Opcional: método para obtener roles
   getRoles(): string[] {
     return this.authService.getRoles();
   }
 }
-

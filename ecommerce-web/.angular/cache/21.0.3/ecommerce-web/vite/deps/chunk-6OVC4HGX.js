@@ -1,6 +1,6 @@
 import {
   ElementRef
-} from "./chunk-PLX4VCLI.js";
+} from "./chunk-R4TDNRVN.js";
 
 // node_modules/@angular/cdk/fesm2022/_element-chunk.mjs
 function coerceNumberProperty(value, fallbackValue = 0) {
@@ -20,4 +20,4 @@ export {
   coerceNumberProperty,
   coerceElement
 };
-//# sourceMappingURL=chunk-HDQPU2PT.js.map
+//# sourceMappingURL=chunk-6OVC4HGX.js.map

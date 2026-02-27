@@ -94,7 +94,7 @@ $breakpoint-xl: 1200px;
   height: 56px;
   border-radius: 50%;
   background-color: var(--verde);
-  color: white;
+  color: var(--oro);
   border: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -126,7 +126,7 @@ $breakpoint-xl: 1200px;
 .btn-primary {
   padding: $spacing-sm $spacing-lg;
   background-color: var(--verde);
-  color: white;
+  color: var(--oro);
   border: none;
   border-radius: $border-radius-md;
   font-weight: 500;
@@ -243,7 +243,7 @@ $breakpoint-xl: 1200px;
     border-radius: $border-radius-md;
     font-size: 0.875rem;
     transition: all 0.2s;
-    background-color: white;
+    background-color: var(--oro);
 
     &:focus {
       outline: none;
@@ -252,7 +252,7 @@ $breakpoint-xl: 1200px;
     }
 
     &::placeholder {
-      color: #aaa;
+      color: var(--verde);
     }
   }
 
@@ -306,7 +306,7 @@ $breakpoint-xl: 1200px;
 .btn-aplicar {
   padding: $spacing-sm $spacing-lg;
   background-color: var(--verde);
-  color: white;
+  color: var(--oro);
   border: none;
   border-radius: $border-radius-md;
   font-weight: 500;
@@ -501,7 +501,7 @@ $breakpoint-xl: 1200px;
     display: inline-block;
     padding: $spacing-sm $spacing-lg;
     background-color: var(--verde);
-    color: white;
+    color: var(--oro);
     border: none;
     border-radius: $border-radius-md;
     text-decoration: none;

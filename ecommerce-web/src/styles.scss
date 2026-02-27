@@ -23,6 +23,16 @@ body {
   margin: 0;
   font-family: Roboto, sans-serif;
   background-color: var(--fondo-suave);
+  padding-top: var(--navbar-height);
+  transition: padding-top 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding-top: var(--navbar-height-mobile);
+  }
+
+  &.navbar-hidden {
+    padding-top: 0;
+  }
 }
 
 .material-icons {
@@ -67,3 +77,88 @@ body {
 .material-icons.oro { color: var(--oro); }
 .material-icons.error { color: var(--error); }
 .material-icons.correcto { color: var(--correcto); }
+
+
+// Estructura principal
+main {
+  display: block;
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: 0; // El padding ya lo controla body
+
+  @media (max-width: 768px) {
+    min-height: calc(100vh - var(--navbar-height-mobile));
+  }
+}
+
+// Ajustes para cuando el navbar está oculto
+body.navbar-hidden {
+  main {
+    min-height: 100vh;
+  }
+
+  // La notificación se pega arriba
+  app-notification .notification-container {
+    top: 16px !important;
+  }
+}
+
+// Aseguramos que los componentes flotantes no interfieran
+app-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 1100;
+}
+
+app-cesta-flotante {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 900;
+  pointer-events: none;
+
+  // El botón dentro sí puede recibir eventos
+  .cesta-flotante {
+    pointer-events: all;
+  }
+}
+
+app-confirm-modal,
+app-confirmacion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1200;
+
+  // El modal dentro sí puede recibir eventos
+  .modal, .confirmacion {
+    pointer-events: all;
+  }
+}
+
+// Ajuste específico para la cesta flotante
+.cesta-flotante {
+  position: relative;
+  margin: 24px;
+
+  @media (max-width: 768px) {
+    margin: 16px;
+  }
+}
+
+// Ajuste para la mini cesta
+app-mini-cesta {
+  position: absolute;
+  bottom: 80px;
+  right: 24px;
+
+  @media (max-width: 768px) {
+    right: 16px;
+    bottom: 70px;
+  }
+}

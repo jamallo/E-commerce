@@ -299,7 +299,7 @@ $breakpoint-lg: 992px;
   max-width: 180px;
   padding: $spacing-sm $spacing-lg;
   background: var(--verde, #1b5e20);
-  color: white;
+  color: var(--oro);
   border: none;
   border-radius: $border-radius-xl;
   font-weight: 600;
@@ -322,7 +322,7 @@ $breakpoint-lg: 992px;
     padding: $spacing-md $spacing-xl;
 
     &:hover {
-      filter: brightness(0.9); // Alternativa simple a darken
+      filter: brightness(0.9);
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(27, 94, 32, 0.3);
     }
@@ -365,7 +365,7 @@ $breakpoint-lg: 992px;
     transform: translateX(-50%);
     padding: $spacing-xs $spacing-sm;
     background: rgba(0, 0, 0, 0.8);
-    color: white;
+    color: var(--oro);
     font-size: 0.75rem;
     border-radius: $border-radius-sm;
     white-space: nowrap;

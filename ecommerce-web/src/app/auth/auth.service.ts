@@ -1,12 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
   sub: string;
   roles?: string[];
   exp: number;
+}
+
+// Interfaz para login
+export interface LoginRequest {
+  email: string;
+  contrasenia: string;
+}
+
+// Interfaz para registro (solo email y contraseña)
+export interface RegistroRequest {
+  email: string;
+  contrasenia: string;
+}
+
+export interface LoginResponse {
+  token: string;
 }
 
 @Injectable({
@@ -18,15 +34,24 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, contrasenia: string) {
-    return this.http.post<any>(`${this.API_URL}/login`, {
-      email,
-      contrasenia
-    }).pipe(
+  login(email: string, contrasenia: string): Observable<LoginResponse> {
+    const loginData: LoginRequest = { email, contrasenia };
+
+    return this.http.post<LoginResponse>(`${this.API_URL}/login`, loginData).pipe(
       tap(response => {
         localStorage.setItem('token', response.token);
       })
     );
+  }
+
+  // ✅ CORREGIDO: Usa /register en lugar de /registro
+  registro(email: string, contrasenia: string): Observable<string> {
+    const registroData: RegistroRequest = { email, contrasenia };
+
+    // El backend devuelve un String con el mensaje
+    return this.http.post<string>(`${this.API_URL}/register`, registroData, {
+      responseType: 'text' as 'json' // Importante para que interprete la respuesta como texto
+    });
   }
 
   getToken(): string | null {
@@ -53,22 +78,21 @@ export class AuthService {
   }
 
   isTokenValid(): boolean {
-  const token = this.getToken();
-  if (!token) return false;
+    const token = this.getToken();
+    if (!token) return false;
 
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const exp = payload.exp * 1000;
-    return Date.now() < exp;
-  } catch {
-    return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000;
+      return Date.now() < exp;
+    } catch {
+      return false;
+    }
   }
-}
 
-isTokenExpired(): boolean {
-  return !this.isTokenValid();
-}
-
+  isTokenExpired(): boolean {
+    return !this.isTokenValid();
+  }
 
   isLogged(): boolean {
     return !!this.getToken() && !this.isTokenExpired();
@@ -82,8 +106,12 @@ isTokenExpired(): boolean {
     const token = this.getToken();
     if (!token) return [];
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.roles ?? [];
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.roles ?? [];
+    } catch {
+      return [];
+    }
   }
 
   isAdmin(): boolean {
