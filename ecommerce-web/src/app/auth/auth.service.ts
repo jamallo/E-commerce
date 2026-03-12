@@ -44,13 +44,12 @@ export class AuthService {
     );
   }
 
-  // ✅ CORREGIDO: Usa /register en lugar de /registro
   registro(email: string, contrasenia: string): Observable<string> {
     const registroData: RegistroRequest = { email, contrasenia };
 
-    // El backend devuelve un String con el mensaje
+
     return this.http.post<string>(`${this.API_URL}/register`, registroData, {
-      responseType: 'text' as 'json' // Importante para que interprete la respuesta como texto
+      responseType: 'text' as 'json'
     });
   }
 

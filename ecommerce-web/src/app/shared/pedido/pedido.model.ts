@@ -8,6 +8,7 @@ export interface DireccionEnvio {
   direccion: string;
   ciudad: string;
   codigoPostal: string;
+  provincia: string;
   telefono: string;
 }
 
@@ -22,7 +23,7 @@ export interface PedidoHistoriaDTO {
   id: number;
   fecha: string;
   total: number;
-  estado: string;
+  estado: 'PENDIENTE' | 'CONFIRMADO' | 'ENVIADO';
 }
 
 export interface PedidoItem {
@@ -45,6 +46,46 @@ export interface PedidoRepetirItem {
   nombre: string;
   precio: number;
   cantidad: number;
+}
+
+export interface PedidoDetalleDTO {
+  id: number;
+  fecha: string;
+  estado: 'PENDIENTE' | 'CONFIRMADO' | 'ENVIADO';
+  total: number;
+  items: PedidoItem[];
+  // Información de envío
+  nombre: string;
+  apellidos: string;
+  direccion: string;
+  ciudad: string;
+  codigoPostal: string;
+  provincia: string;
+  telefono: string;
+}
+
+export interface PedidoRepetirItemDTO {
+  productoId: number;
+  nombre: string;
+  precio: number;
+  cantidad: number;
+}
+
+export interface ItemCheckoutDTO {
+  productoId: number;
+  cantidad: number;
+}
+
+export interface CheckoutRequestDTO {
+  items: ItemCheckoutDTO[];
+  direccion: DireccionEnvio;
+}
+
+export interface PedidoResponseDTO {
+  id: number;
+  total: number;
+  estado: string;
+  fechaCreacion: string;
 }
 
 /* @Injectable({
